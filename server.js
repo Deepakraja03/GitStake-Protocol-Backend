@@ -23,6 +23,7 @@ const authRoutes = require('./routes/authRoutes');
 const githubRoutes = require('./routes/githubRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const emailRoutes = require('./routes/emailRoutes');
+const { range } = require('lodash');
 
 // Global middleware
 app.use(helmet());
@@ -37,6 +38,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/github', githubRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/email', emailRoutes);
+
+
+app.get('/', (req, res) => {
+  res.json({
+    message: '🚀GitStake Backend Running Successfully.'
+  });
+});
+
 
 // Health check
 app.get('/health', (req, res) => {

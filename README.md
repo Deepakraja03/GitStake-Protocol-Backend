@@ -1,6 +1,6 @@
 # GitStake - Advanced GitHub Analytics & Developer Recognition Platform
 
-A comprehensive Node.js Express server that analyzes GitHub profiles using AI, provides developer level progression, rewards excellence, and offers intelligent assistance through dual AI systems with web search capabilities.
+A comprehensive Node.js Express server that analyzes GitHub profiles using AI, provides developer level progression, rewards excellence with crypto incentives, and offers intelligent assistance through dual AI systems with web search capabilities. Features an AI-powered quest system with difficulty-scaled coding challenges.
 
 ## 🚀 Core Features
 
@@ -59,6 +59,16 @@ A comprehensive Node.js Express server that analyzes GitHub profiles using AI, p
 - **Automated Triggers**: Level ups, achievements, analysis completion
 - **Personalized Content**: Dynamic content based on user progress
 - **Template Previews**: Test and preview email templates
+
+### 🎯 AI-Powered Quest System
+- **Difficulty-Scaled Challenges**: Problems tailored to each of 8 developer levels
+- **Unique Problem Generation**: AI creates diverse, never-repeated coding challenges
+- **Weekly Quest Generation**: Automated creation of coding challenges using Pollinations.ai
+- **Theme Integration**: Creative narratives woven into problem statements (adventure, cyberpunk, fantasy, etc.)
+- **Crypto Rewards**: ETH rewards for quest winners and participants
+- **Complete Lifecycle Management**: Automated staking, challenge, and results phases
+- **Smart Problem Complexity**: From basic loops (Rookie) to research-level algorithms (Titan)
+- **Randomized Diversity**: Each quest is unique with creative twists and original examples
 
 ## 📁 Enhanced Project Structure
 
@@ -235,6 +245,28 @@ npm start
 - `GET /api/email/preview/onboarding` - Preview onboarding email
 - `GET /api/email/preview/leaderboard` - Preview leaderboard email
 
+### 🎯 Quest System
+- `POST /api/quests/generate` - Generate AI-powered quest for specific level
+- `POST /api/quests/generate-weekly` - Generate quests for all 8 levels
+- `GET /api/quests/active` - Get active quests with filtering
+- `GET /api/quests/:questId` - Get quest details and problem statement
+- `POST /api/quests/:questId/stake` - Stake user for quest participation
+- `POST /api/quests/:questId/submit` - Submit solution for evaluation
+- `GET /api/quests/:questId/leaderboard` - Get quest rankings and scores
+- `GET /api/quests/user/:username/history` - User's quest participation history
+- `PUT /api/quests/update-wallet` - Update user's crypto wallet address
+- `GET /api/quests/crypto-rates` - Get crypto reward rates by level
+- `PUT /api/quests/update-statuses` - Update quest statuses (admin)
+- `POST /api/quests/send-notifications` - Send quest notifications (admin)
+- `POST /api/quests/auto-generate-weekly` - Auto-generate weekly quests (cron)
+- `POST /api/quests/:questId/process-results` - Process quest results (admin)
+
+### ⏰ Cron Job Management
+- `GET /api/cron/status` - Get cron job status
+- `POST /api/cron/start-all` - Start all automated jobs
+- `POST /api/cron/stop-all` - Stop all automated jobs
+- `POST /api/cron/trigger/:jobName` - Manually trigger specific job
+
 ### 🔐 Authentication
 - `POST /api/auth/login` - User authentication
 - `POST /api/auth/register` - User registration
@@ -303,6 +335,52 @@ curl http://localhost:3000/api/github/analytics/octocat/collaboration
 curl http://localhost:3000/api/github/analytics/octocat/quality
 ```
 
+### 🎯 Quest System
+```bash
+# Generate a difficulty-scaled quest
+curl -X POST http://localhost:3000/api/quests/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "developerLevel": "CRAFTSMAN",
+    "challengeType": "algorithm",
+    "techStack": ["JavaScript"],
+    "theme": "adventure"
+  }'
+
+# Generate weekly quests for all 8 levels
+curl -X POST http://localhost:3000/api/quests/generate-weekly
+
+# Stake for a quest
+curl -X POST http://localhost:3000/api/quests/QUEST_CRAFTSMAN_W45_2024/stake \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "developer123",
+    "email": "dev@example.com",
+    "developerLevel": "CRAFTSMAN",
+    "walletAddress": "0x742d35Cc6634C0532925a3b8D4C9db96590c6C87"
+  }'
+
+# Submit solution
+curl -X POST http://localhost:3000/api/quests/QUEST_CRAFTSMAN_W45_2024/submit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "developer123",
+    "email": "dev@example.com",
+    "solution": "function solve(input) { /* solution */ }"
+  }'
+
+# Update wallet address
+curl -X PUT http://localhost:3000/api/quests/update-wallet \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "developer123",
+    "walletAddress": "0x742d35Cc6634C0532925a3b8D4C9db96590c6C87"
+  }'
+
+# Get crypto reward rates
+curl http://localhost:3000/api/quests/crypto-rates
+```
+
 ### 📧 Email Notifications
 ```bash
 # Send level up notification
@@ -334,6 +412,46 @@ curl "http://localhost:3000/api/github/search/repositories?q=javascript&sort=sta
 # Get pull request details
 curl http://localhost:3000/api/github/repos/octocat/Hello-World/pulls/1
 ```
+
+## 🎯 Quest System Difficulty Scaling
+
+### 📊 Level-Based Problem Complexity
+The quest system automatically scales problem difficulty based on developer levels:
+
+| Level | Duration | Complexity | Code Length | Focus Areas |
+|-------|----------|------------|-------------|-------------|
+| 🌱 **ROOKIE** | 1-2 hours | O(n) or O(n²) | 10-20 lines | Basic syntax, loops, conditionals |
+| 🔍 **EXPLORER** | 2-3 hours | O(n) to O(n log n) | 20-40 lines | Data structures, simple algorithms |
+| 🔨 **BUILDER** | 2-3 hours | O(n log n) preferred | 40-60 lines | Hash maps, sets, optimization |
+| ⚡ **CRAFTSMAN** | 3-4 hours | O(n log n) or better | 60-100 lines | Trees, graphs, dynamic programming |
+| 🏗️ **ARCHITECT** | 4-5 hours | Highly optimized | 100-150 lines | System design, advanced algorithms |
+| 🧙‍♂️ **WIZARD** | 4-6 hours | Optimal solutions | 150-200 lines | Advanced algorithms, optimizations |
+| 👑 **LEGEND** | 5-7 hours | Cutting-edge | 200-300 lines | Mathematical concepts, innovations |
+| 🚀 **TITAN** | 6-8 hours | Theoretical limits | 300+ lines | Research-level, novel approaches |
+
+### 🎮 Quest Lifecycle
+- **Sunday**: AI generates 8 completely unique quests (one per level) with diverse themes and problems
+- **Monday-Tuesday**: Staking period (developers commit to participate)
+- **Wednesday-Thursday**: Challenge period (submit solutions)
+- **Friday**: Automated results processing and scoring
+- **Saturday**: Winners announced, crypto rewards distributed
+
+### 🎨 Quest Diversity Features
+- **Unique Problem Statements**: Every quest is completely original, never repeated
+- **Theme Integration**: Problems creatively incorporate themes (adventure, cyberpunk, fantasy, mystery, space, nature)
+- **Randomized Complexity**: AI uses random seeds to ensure no two quests are identical
+- **Creative Narratives**: Each problem tells a story that makes coding challenges engaging
+- **Original Examples**: Custom test cases that aren't typical textbook problems
+
+### 💰 Crypto Reward Structure
+- **ROOKIE**: 0.001 ETH (participation) / 0.003 ETH (winner)
+- **EXPLORER**: 0.002 ETH (participation) / 0.006 ETH (winner)
+- **BUILDER**: 0.003 ETH (participation) / 0.009 ETH (winner)
+- **CRAFTSMAN**: 0.005 ETH (participation) / 0.015 ETH (winner)
+- **ARCHITECT**: 0.008 ETH (participation) / 0.024 ETH (winner)
+- **WIZARD**: 0.012 ETH (participation) / 0.036 ETH (winner)
+- **LEGEND**: 0.020 ETH (participation) / 0.060 ETH (winner)
+- **TITAN**: 0.050 ETH (participation) / 0.150 ETH (winner)
 
 ## 🔍 Advanced Analytics Features
 
@@ -529,6 +647,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**GitStake** - Where GitHub contributions meet recognition, rewards, and intelligent growth guidance! 🚀
+**GitStake** - Where GitHub contributions meet recognition, crypto rewards, and intelligent growth guidance! 🚀
 
-*Transform your GitHub profile into a comprehensive developer portfolio with AI-powered insights and gamified progression.*
+*Transform your GitHub profile into a comprehensive developer portfolio with AI-powered insights, gamified progression, and earn cryptocurrency through difficulty-scaled coding challenges.*
+
+### 🎯 **What Makes GitStake Unique:**
+- **AI-Powered Difficulty Scaling**: Problems automatically adjust from basic syntax (Rookie) to research-level algorithms (Titan)
+- **Real Crypto Rewards**: Earn actual ETH for solving coding challenges at your skill level
+- **Complete Automation**: Weekly quest generation, lifecycle management, and reward distribution
+- **Comprehensive Analytics**: 50+ GitHub metrics with AI-powered insights and growth recommendations
+- **Dual AI System**: Standard platform assistance + web-enhanced search capabilities

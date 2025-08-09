@@ -24,7 +24,8 @@ const githubRoutes = require('./routes/githubRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const emailRoutes = require('./routes/emailRoutes');
 const deepSearchRoutes = require('./routes/deepSearchRoutes');
-const { range } = require('lodash');
+const questRoutes = require('./routes/questRoutes');
+const cronRoutes = require('./routes/cronRoutes');
 
 // Global middleware
 app.use(helmet());
@@ -40,7 +41,8 @@ app.use('/api/github', githubRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/email', emailRoutes);
 app.use('/api/deep-search', deepSearchRoutes);
-
+app.use('/api/quests', questRoutes);
+app.use('/api/cron', cronRoutes);
 
 app.get('/', (req, res) => {
   res.json({
@@ -104,6 +106,31 @@ app.get('/api', (req, res) => {
         'POST /api/auth/login': 'User login',
         'POST /api/auth/register': 'User registration',
         'POST /api/auth/logout': 'User logout'
+      },
+      quests: {
+        'POST /api/quests/generate': 'Generate a new quest for specific level',
+        'POST /api/quests/generate-weekly': 'Generate weekly quests for all levels',
+        'GET /api/quests/active': 'Get active quests',
+        'GET /api/quests/:questId': 'Get quest by ID',
+        'POST /api/quests/:questId/stake': 'Stake user for quest',
+        'POST /api/quests/:questId/submit': 'Submit solution for quest',
+        'GET /api/quests/:questId/leaderboard': 'Get quest leaderboard',
+        'GET /api/quests/user/:username/history': 'Get user quest history',
+        'PUT /api/quests/update-statuses': 'Update quest statuses (admin)',
+        'POST /api/quests/send-notifications': 'Send quest notifications (admin)',
+        'POST /api/quests/auto-generate-weekly': 'Auto-generate weekly quests (cron)',
+        'POST /api/quests/:questId/process-results': 'Process quest results (admin)',
+        'POST /api/quests/process-all-closed': 'Process all closed quests (admin)',
+        'PUT /api/quests/update-wallet': 'Update user wallet address',
+        'GET /api/quests/crypto-rates': 'Get crypto reward rates by level'
+      },
+      cron: {
+        'GET /api/cron/status': 'Get cron jobs status',
+        'POST /api/cron/start-all': 'Start all cron jobs',
+        'POST /api/cron/stop-all': 'Stop all cron jobs',
+        'POST /api/cron/start/:jobName': 'Start specific cron job',
+        'POST /api/cron/stop/:jobName': 'Stop specific cron job',
+        'POST /api/cron/trigger/:jobName': 'Manually trigger cron job'
       }
     }
   });

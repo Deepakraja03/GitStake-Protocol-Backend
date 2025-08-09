@@ -1,0 +1,122 @@
+{
+  "name": "Cron Job Management",
+  "item": [
+    {
+      "name": "Get Cron Jobs Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "status"]
+        },
+        "description": "Get status of all cron jobs (running/stopped)"
+      }
+    },
+    {
+      "name": "Start All Cron Jobs",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/start-all",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "start-all"]
+        },
+        "description": "Start all cron jobs"
+      }
+    },
+    {
+      "name": "Stop All Cron Jobs",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/stop-all",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "stop-all"]
+        },
+        "description": "Stop all cron jobs"
+      }
+    },
+    {
+      "name": "Start Specific Job",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/start/{{jobName}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "start", "{{jobName}}"]
+        },
+        "description": "Start a specific cron job. Available jobs: weeklyQuestGeneration, statusUpdate, notifications, resultsProcessing"
+      }
+    },
+    {
+      "name": "Stop Specific Job",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/stop/{{jobName}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "stop", "{{jobName}}"]
+        },
+        "description": "Stop a specific cron job"
+      }
+    },
+    {
+      "name": "Trigger Weekly Quest Generation",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/trigger/weeklyQuestGeneration",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "trigger", "weeklyQuestGeneration"]
+        },
+        "description": "Manually trigger weekly quest generation"
+      }
+    },
+    {
+      "name": "Trigger Status Update",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/trigger/statusUpdate",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "trigger", "statusUpdate"]
+        },
+        "description": "Manually trigger quest status updates"
+      }
+    },
+    {
+      "name": "Trigger Notifications",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/trigger/notifications",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "trigger", "notifications"]
+        },
+        "description": "Manually trigger scheduled notifications"
+      }
+    },
+    {
+      "name": "Trigger Results Processing",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/cron/trigger/resultsProcessing",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cron", "trigger", "resultsProcessing"]
+        },
+        "description": "Manually trigger quest results processing"
+      }
+    }
+  ]
+}

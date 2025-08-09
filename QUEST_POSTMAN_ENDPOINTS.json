@@ -1,0 +1,252 @@
+{
+  "name": "Quest System",
+  "item": [
+    {
+      "name": "Quest Management",
+      "item": [
+        {
+          "name": "Generate Quest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"developerLevel\": \"BUILDER\",\n  \"challengeType\": \"algorithm\",\n  \"techStack\": [\"JavaScript\", \"Node.js\"],\n  \"theme\": \"adventure\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "generate"]
+            },
+            "description": "Generate a new quest for specific developer level using AI"
+          }
+        },
+        {
+          "name": "Generate Weekly Quests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/generate-weekly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "generate-weekly"]
+            },
+            "description": "Generate quests for all developer levels for the current week"
+          }
+        },
+        {
+          "name": "Auto-Generate Weekly Quests",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/auto-generate-weekly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "auto-generate-weekly"]
+            },
+            "description": "Auto-generate weekly quests (cron job endpoint)"
+          }
+        },
+        {
+          "name": "Get Active Quests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/active?developerLevel=BUILDER",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "active"],
+              "query": [
+                {
+                  "key": "developerLevel",
+                  "value": "BUILDER",
+                  "description": "Filter by developer level (optional)"
+                }
+              ]
+            },
+            "description": "Get all active quests, optionally filtered by developer level"
+          }
+        },
+        {
+          "name": "Get Quest by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/{{questId}}?includeSolution=false",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "{{questId}}"],
+              "query": [
+                {
+                  "key": "includeSolution",
+                  "value": "false",
+                  "description": "Include solution in response (admin only)"
+                }
+              ]
+            },
+            "description": "Get quest details by quest ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Quest Participation",
+      "item": [
+        {
+          "name": "Stake for Quest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"developer123\",\n  \"email\": \"developer@example.com\",\n  \"developerLevel\": \"BUILDER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/{{questId}}/stake",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "{{questId}}", "stake"]
+            },
+            "description": "Stake user for a quest during staking period"
+          }
+        },
+        {
+          "name": "Submit Solution",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"developer123\",\n  \"email\": \"developer@example.com\",\n  \"solution\": \"function solve(input) {\\n  // Your solution code here\\n  return result;\\n}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/{{questId}}/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "{{questId}}", "submit"]
+            },
+            "description": "Submit solution for a quest during challenge period"
+          }
+        },
+        {
+          "name": "Get Quest Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/{{questId}}/leaderboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "{{questId}}", "leaderboard"]
+            },
+            "description": "Get quest leaderboard with rankings and scores"
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Quest History",
+      "item": [
+        {
+          "name": "Get User Quest History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/user/{{username}}/history?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "user", "{{username}}", "history"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number for pagination"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of quests per page"
+                }
+              ]
+            },
+            "description": "Get user's quest participation history with pagination"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin/System",
+      "item": [
+        {
+          "name": "Update Quest Statuses",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/update-statuses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "update-statuses"]
+            },
+            "description": "Update quest statuses based on schedule (admin/cron)"
+          }
+        },
+        {
+          "name": "Send Quest Notifications",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/send-notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "send-notifications"]
+            },
+            "description": "Send scheduled quest notifications (admin/cron)"
+          }
+        },
+        {
+          "name": "Process Quest Results",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/{{questId}}/process-results",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "{{questId}}", "process-results"]
+            },
+            "description": "Process quest results and determine winners (admin)"
+          }
+        },
+        {
+          "name": "Process All Closed Quests",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/quests/process-all-closed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "quests", "process-all-closed"]
+            },
+            "description": "Bulk process all quests in closed status (admin)"
+          }
+        }
+      ]
+    }
+  ]
+}

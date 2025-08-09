@@ -79,6 +79,18 @@ const GitHubUserSchema = new mongoose.Schema({
     maxScore: Number,
     description: String,
     currentScore: Number
+  },
+  walletAddress: {
+    type: String,
+    sparse: true, // Allows null values but ensures uniqueness when present
+    validate: {
+      validator: function(v) {
+        if (!v) return true; // Allow null/undefined
+        // Basic validation for common wallet address formats
+        return /^(0x[a-fA-F0-9]{40}|[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[a-z0-9]{39,59})$/.test(v);
+      },
+      message: 'Invalid wallet address format'
+    }
   }
 }, {
   timestamps: true

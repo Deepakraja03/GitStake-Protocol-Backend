@@ -10,7 +10,10 @@ const GitHubUserSchema = new mongoose.Schema({
   githubId: {
     type: Number,
     required: true,
-    unique: true
+    unique: true,
+    default: function() {
+      return Date.now(); // Fallback if not provided
+    }
   },
   profile: {
     name: String,

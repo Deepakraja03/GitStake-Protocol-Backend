@@ -1,6 +1,8 @@
 const { Octokit } = require('@octokit/rest');
 const moment = require('moment');
 const _ = require('lodash');
+const AdvancedAnalytics = require('./advancedAnalytics');
+const DataProcessingHelpers = require('./dataProcessingHelpers');
 
 class GitHubService {
   constructor() {
@@ -21,6 +23,10 @@ class GitHubService {
       const { data } = await this.octokit.rest.users.getByUsername({
         username
       });
+      
+      // Debug: Log the profile data to ensure id is present
+      console.log('GitHub Profile Data:', { id: data.id, login: data.login, name: data.name });
+      
       return data;
     } catch (error) {
       throw new Error(`Failed to fetch user profile: ${error.message}`);
@@ -142,97 +148,434 @@ class GitHubService {
 
   async analyzeUserActivity(username) {
     try {
-      console.log(`Starting analysis for user: ${username}`);
+      console.log(`🔍 Starting comprehensive analysis for user: ${username}`);
       
-      const profile = await this.getUserProfile(username);
-      const repositories = await this.getUserRepositories(username);
-      
+      // Get basic profile and repositories
+      const [profile, repositories, userEvents] = await Promise.all([
+        this.getUserProfile(username),
+        this.getUserRepositories(username),
+        this.getUserEvents(username).catch(() => []) // Fallback to empty array if fails
+      ]);
+
+      console.log(`📊 Found ${repositories.length} repositories to analyze`);
+
+      // Initialize comprehensive analytics
       let totalCommits = 0;
       let totalPRs = 0;
       let totalIssues = 0;
       let totalMerges = 0;
       let emptyCommits = 0;
+      let qualityCommits = 0;
+      let totalStars = 0;
+      let totalForks = 0;
+      let totalWatchers = 0;
+      let totalCodeSize = 0;
+      
       const languageStats = {};
       const repoDetails = [];
+      const commitPatterns = {};
+      const collaborationData = {
+        uniqueCollaborators: new Set(),
+        crossRepoContributions: 0,
+        communityEngagement: 0
+      };
 
-      // Analyze each repository
-      for (const repo of repositories.slice(0, 20)) { // Limit to 20 repos to avoid rate limits
-        console.log(`Analyzing repository: ${repo.name}`);
+      // Detailed data collections
+      const allCommits = [];
+      const allPullRequests = [];
+      const allIssues = [];
+      const allMerges = [];
+      const allContributors = [];
+      const allLanguages = {};
+      const repositoryStats = [];
+      
+      // Advanced metrics
+      const activityByMonth = {};
+      const commitTimePatterns = { morning: 0, afternoon: 0, evening: 0, night: 0 };
+      const repoCategories = { personal: 0, forked: 0, contributed: 0, starred: 0 };
+      const techStack = new Set();
+
+      // Analyze each repository with comprehensive details
+      const repoLimit = Math.min(repositories.length, 30); // Analyze up to 30 repos
+      for (let i = 0; i < repoLimit; i++) {
+        const repo = repositories[i];
+        console.log(`🔬 Analyzing repository ${i + 1}/${repoLimit}: ${repo.name}`);
         
-        const [commits, prs, issues, languages] = await Promise.all([
-          this.getRepositoryCommits(username, repo.name),
-          this.getRepositoryPullRequests(username, repo.name),
-          this.getRepositoryIssues(username, repo.name),
-          this.getRepositoryLanguages(username, repo.name)
-        ]);
+        try {
+          // Get comprehensive repo data
+          const [commits, prs, issues, languages, contributors, repoStats] = await Promise.all([
+            this.getRepositoryCommits(username, repo.name),
+            this.getRepositoryPullRequests(username, repo.name),
+            this.getRepositoryIssues(username, repo.name),
+            this.getRepositoryLanguages(username, repo.name),
+            this.getRepositoryContributors(username, repo.name).catch(() => []),
+            this.getRepositoryStats(username, repo.name).catch(() => null)
+          ]);
 
-        // Count empty commits
-        const emptyCommitsInRepo = commits.filter(commit => 
-          !commit.commit.message || 
-          commit.commit.message.trim().length < 10 ||
-          /^(fix|update|change|modify)$/i.test(commit.commit.message.trim())
-        ).length;
+          // Analyze commits in detail
+          const repoCommitAnalysis = this.analyzeCommitQuality(commits);
+          const repoActivityPattern = this.analyzeActivityPatterns(commits);
+          
+          // Collect detailed commit data
+          const detailedCommits = commits.map(commit => ({
+            sha: commit.sha,
+            message: commit.commit.message,
+            author: {
+              name: commit.commit.author.name,
+              email: commit.commit.author.email,
+              date: commit.commit.author.date,
+              login: commit.author?.login || 'unknown'
+            },
+            committer: {
+              name: commit.commit.committer.name,
+              email: commit.commit.committer.email,
+              date: commit.commit.committer.date,
+              login: commit.committer?.login || 'unknown'
+            },
+            repository: repo.name,
+            url: commit.html_url,
+            stats: commit.stats || null,
+            files: commit.files ? commit.files.map(file => ({
+              filename: file.filename,
+              status: file.status,
+              additions: file.additions,
+              deletions: file.deletions,
+              changes: file.changes
+            })) : [],
+            isQuality: !this.isEmptyCommit(commit.commit.message),
+            messageLength: commit.commit.message.length,
+            linesChanged: (commit.stats?.additions || 0) + (commit.stats?.deletions || 0)
+          }));
+          allCommits.push(...detailedCommits);
 
-        // Count merged PRs
-        const mergedPRs = prs.filter(pr => pr.merged_at).length;
+          // Collect detailed PR data
+          const detailedPRs = prs.map(pr => ({
+            id: pr.id,
+            number: pr.number,
+            title: pr.title,
+            body: pr.body,
+            state: pr.state,
+            created_at: pr.created_at,
+            updated_at: pr.updated_at,
+            closed_at: pr.closed_at,
+            merged_at: pr.merged_at,
+            merge_commit_sha: pr.merge_commit_sha,
+            author: {
+              login: pr.user.login,
+              avatar_url: pr.user.avatar_url
+            },
+            repository: repo.name,
+            url: pr.html_url,
+            draft: pr.draft,
+            mergeable: pr.mergeable,
+            mergeable_state: pr.mergeable_state,
+            merged: !!pr.merged_at,
+            comments: pr.comments,
+            review_comments: pr.review_comments,
+            commits: pr.commits,
+            additions: pr.additions,
+            deletions: pr.deletions,
+            changed_files: pr.changed_files,
+            labels: pr.labels?.map(label => ({
+              name: label.name,
+              color: label.color,
+              description: label.description
+            })) || []
+          }));
+          allPullRequests.push(...detailedPRs);
 
-        totalCommits += commits.length;
-        totalPRs += prs.length;
-        totalIssues += issues.length;
-        totalMerges += mergedPRs;
-        emptyCommits += emptyCommitsInRepo;
+          // Collect detailed issues data
+          const detailedIssues = issues.map(issue => ({
+            id: issue.id,
+            number: issue.number,
+            title: issue.title,
+            body: issue.body,
+            state: issue.state,
+            created_at: issue.created_at,
+            updated_at: issue.updated_at,
+            closed_at: issue.closed_at,
+            author: {
+              login: issue.user.login,
+              avatar_url: issue.user.avatar_url
+            },
+            assignees: issue.assignees?.map(assignee => ({
+              login: assignee.login,
+              avatar_url: assignee.avatar_url
+            })) || [],
+            repository: repo.name,
+            url: issue.html_url,
+            comments: issue.comments,
+            labels: issue.labels?.map(label => ({
+              name: label.name,
+              color: label.color,
+              description: label.description
+            })) || [],
+            milestone: issue.milestone ? {
+              title: issue.milestone.title,
+              description: issue.milestone.description,
+              state: issue.milestone.state,
+              due_on: issue.milestone.due_on
+            } : null
+          }));
+          allIssues.push(...detailedIssues);
 
-        // Aggregate language statistics
-        Object.entries(languages).forEach(([lang, bytes]) => {
-          languageStats[lang] = (languageStats[lang] || 0) + bytes;
-        });
+          // Collect merge data
+          const mergedPRs = prs.filter(pr => pr.merged_at);
+          const detailedMerges = mergedPRs.map(pr => ({
+            id: pr.id,
+            number: pr.number,
+            title: pr.title,
+            merged_at: pr.merged_at,
+            merge_commit_sha: pr.merge_commit_sha,
+            author: {
+              login: pr.user.login,
+              avatar_url: pr.user.avatar_url
+            },
+            repository: repo.name,
+            url: pr.html_url,
+            additions: pr.additions,
+            deletions: pr.deletions,
+            changed_files: pr.changed_files,
+            commits: pr.commits
+          }));
+          allMerges.push(...detailedMerges);
 
-        repoDetails.push({
-          name: repo.name,
-          fullName: repo.full_name,
-          description: repo.description,
-          language: repo.language,
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          size: repo.size,
-          createdAt: repo.created_at,
-          updatedAt: repo.updated_at,
-          pushedAt: repo.pushed_at,
-          commits: commits.length,
-          prs: prs.length,
-          issues: issues.length
-        });
+          // Collect contributors data
+          const detailedContributors = contributors.map(contributor => ({
+            login: contributor.login,
+            avatar_url: contributor.avatar_url,
+            contributions: contributor.contributions,
+            repository: repo.name,
+            url: contributor.html_url,
+            type: contributor.type
+          }));
+          allContributors.push(...detailedContributors);
+          
+          // Update totals
+          totalCommits += commits.length;
+          totalPRs += prs.length;
+          totalIssues += issues.length;
+          totalStars += repo.stargazers_count;
+          totalForks += repo.forks_count;
+          totalWatchers += repo.watchers_count || 0;
+          totalCodeSize += repo.size;
+          
+          // Count merged PRs and quality metrics
+          totalMerges += mergedPRs.length;
+          emptyCommits += repoCommitAnalysis.emptyCommits;
+          qualityCommits += repoCommitAnalysis.qualityCommits;
 
-        // Add delay to respect rate limits
-        await new Promise(resolve => setTimeout(resolve, 100));
+          // Analyze collaboration
+          collaborationData.uniqueCollaborators.add(...contributors.map(c => c.login));
+          if (contributors.length > 1) collaborationData.crossRepoContributions++;
+
+          // Language and tech stack analysis
+          Object.entries(languages).forEach(([lang, bytes]) => {
+            languageStats[lang] = (languageStats[lang] || 0) + bytes;
+            techStack.add(lang);
+            
+            // Store detailed language data per repository
+            if (!allLanguages[lang]) {
+              allLanguages[lang] = {
+                totalBytes: 0,
+                repositories: [],
+                percentage: 0
+              };
+            }
+            allLanguages[lang].totalBytes += bytes;
+            allLanguages[lang].repositories.push({
+              name: repo.name,
+              bytes: bytes,
+              percentage: 0 // Will be calculated later
+            });
+          });
+
+          // Activity patterns
+          Object.entries(repoActivityPattern.monthlyActivity).forEach(([month, count]) => {
+            activityByMonth[month] = (activityByMonth[month] || 0) + count;
+          });
+
+          // Time patterns
+          Object.entries(repoActivityPattern.timePatterns).forEach(([period, count]) => {
+            commitTimePatterns[period] += count;
+          });
+
+          // Repository categorization
+          if (repo.fork) repoCategories.forked++;
+          else if (repo.owner.login === username) repoCategories.personal++;
+          else repoCategories.contributed++;
+
+          // Detailed repository info
+          repoDetails.push({
+            name: repo.name,
+            fullName: repo.full_name,
+            description: repo.description,
+            language: repo.language,
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            watchers: repo.watchers_count || 0,
+            size: repo.size,
+            createdAt: repo.created_at,
+            updatedAt: repo.updated_at,
+            pushedAt: repo.pushed_at,
+            commits: commits.length,
+            prs: prs.length,
+            issues: issues.length,
+            mergedPRs,
+            contributors: contributors.length,
+            isPrivate: repo.private,
+            hasWiki: repo.has_wiki,
+            hasPages: repo.has_pages,
+            openIssues: repo.open_issues_count,
+            defaultBranch: repo.default_branch,
+            topics: repo.topics || [],
+            license: repo.license?.name || null,
+            commitQuality: {
+              total: commits.length,
+              quality: repoCommitAnalysis.qualityCommits,
+              empty: repoCommitAnalysis.emptyCommits,
+              averageMessageLength: repoCommitAnalysis.averageMessageLength
+            },
+            activityScore: this.calculateRepoActivityScore(repo, commits, prs, issues),
+            detailedStats: repoStats,
+            lastCommitDate: commits.length > 0 ? commits[0].commit.author.date : null,
+            firstCommitDate: commits.length > 0 ? commits[commits.length - 1].commit.author.date : null,
+            avgCommitsPerMonth: this.calculateAvgCommitsPerMonth(commits, repo.created_at),
+            codeFrequency: repoStats?.codeFrequency || null,
+            participation: repoStats?.participation || null
+          });
+
+          // Store repository stats
+          repositoryStats.push({
+            repository: repo.name,
+            commits: commits.length,
+            pullRequests: prs.length,
+            issues: issues.length,
+            merges: mergedPRs.length,
+            contributors: contributors.length,
+            languages: Object.keys(languages),
+            totalBytes: Object.values(languages).reduce((sum, bytes) => sum + bytes, 0),
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            watchers: repo.watchers_count || 0,
+            size: repo.size,
+            createdAt: repo.created_at,
+            lastActivity: repo.pushed_at,
+            isPrivate: repo.private,
+            hasIssues: repo.has_issues,
+            hasWiki: repo.has_wiki,
+            hasPages: repo.has_pages,
+            openIssues: repo.open_issues_count,
+            license: repo.license?.name || null,
+            topics: repo.topics || [],
+            description: repo.description
+          });
+
+        } catch (error) {
+          console.warn(`⚠️ Failed to analyze repository ${repo.name}:`, error.message);
+          // Add basic repo info even if detailed analysis fails
+          repoDetails.push({
+            name: repo.name,
+            fullName: repo.full_name,
+            description: repo.description,
+            language: repo.language,
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            size: repo.size,
+            createdAt: repo.created_at,
+            updatedAt: repo.updated_at,
+            pushedAt: repo.pushed_at,
+            commits: 0,
+            prs: 0,
+            issues: 0,
+            error: 'Analysis failed'
+          });
+        }
+
+        // Rate limiting delay
+        await new Promise(resolve => setTimeout(resolve, 150));
       }
 
-      // Calculate language percentages
+      // Calculate comprehensive language statistics
       const totalBytes = Object.values(languageStats).reduce((sum, bytes) => sum + bytes, 0);
       const programmingLanguages = Object.entries(languageStats)
         .map(([language, bytes]) => ({
           language,
           count: bytes,
-          percentage: totalBytes > 0 ? Math.round((bytes / totalBytes) * 100) : 0
+          percentage: totalBytes > 0 ? Math.round((bytes / totalBytes) * 100) : 0,
+          repositories: repoDetails.filter(repo => repo.language === language).length
         }))
         .sort((a, b) => b.percentage - a.percentage);
 
-      // Calculate streak (simplified - based on recent activity)
-      const recentCommits = await this.getRepositoryCommits(username, repositories[0]?.name || '', moment().subtract(30, 'days').toISOString());
-      const streak = this.calculateStreak(recentCommits);
+      // Advanced streak calculation using collected commits
+      const streak = this.calculateAdvancedStreak(allCommits);
 
-      // Calculate proficiency score
-      const proficiencyScore = this.calculateProficiencyScore({
+      // Comprehensive proficiency scoring
+      const advancedMetrics = {
+        codeQualityRatio: totalCommits > 0 ? qualityCommits / totalCommits : 0,
+        collaborationScore: collaborationData.uniqueCollaborators.size,
+        communityImpact: totalStars + (totalForks * 2),
+        languageDiversity: programmingLanguages.length,
+        projectComplexity: totalCodeSize / repositories.length,
+        consistencyScore: this.calculateConsistencyScore(activityByMonth),
+        innovationScore: this.calculateInnovationScore(repoDetails, techStack)
+      };
+
+      const proficiencyScore = this.calculateAdvancedProficiencyScore({
         totalCommits,
         totalPRs,
         repositories: repositories.length,
         languages: programmingLanguages.length,
         emptyCommits,
-        totalMerges
+        totalMerges,
+        ...advancedMetrics
       });
+
+      // Developer insights and patterns
+      const developerInsights = {
+        primaryLanguages: programmingLanguages.slice(0, 3),
+        preferredWorkTime: Object.entries(commitTimePatterns)
+          .sort(([,a], [,b]) => b - a)[0]?.[0] || 'unknown',
+        mostActiveMonth: Object.entries(activityByMonth)
+          .sort(([,a], [,b]) => b - a)[0]?.[0] || 'unknown',
+        collaborationStyle: collaborationData.crossRepoContributions > 5 ? 'collaborative' : 'independent',
+        projectFocus: repoCategories.personal > repoCategories.forked ? 'creator' : 'contributor',
+        techStackBreadth: techStack.size,
+        averageRepoSize: totalCodeSize / repositories.length,
+        communityEngagement: totalStars + totalForks + totalWatchers
+      };
+
+      // Calculate detailed language statistics
+      const totalLanguageBytes = Object.values(languageStats).reduce((sum, bytes) => sum + bytes, 0);
+      Object.keys(allLanguages).forEach(lang => {
+        allLanguages[lang].percentage = totalLanguageBytes > 0 ? 
+          Math.round((allLanguages[lang].totalBytes / totalLanguageBytes) * 100) : 0;
+        
+        // Calculate percentage for each repository
+        allLanguages[lang].repositories.forEach(repo => {
+          repo.percentage = allLanguages[lang].totalBytes > 0 ? 
+            Math.round((repo.bytes / allLanguages[lang].totalBytes) * 100) : 0;
+        });
+      });
+
+      // Sort and organize data
+      const sortedCommits = allCommits.sort((a, b) => new Date(b.author.date) - new Date(a.author.date));
+      const sortedPRs = allPullRequests.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      const sortedIssues = allIssues.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      const sortedMerges = allMerges.sort((a, b) => new Date(b.merged_at) - new Date(a.merged_at));
+
+      // Generate comprehensive statistics
+      const commitStats = this.generateCommitStatistics(sortedCommits);
+      const prStats = this.generatePRStatistics(sortedPRs);
+      const issueStats = this.generateIssueStatistics(sortedIssues);
+      const collaborationStats = this.generateCollaborationStatistics(allContributors);
+
+      console.log(`✅ Analysis complete! Processed ${repoDetails.length} repositories`);
+      console.log(`📊 Collected: ${sortedCommits.length} commits, ${sortedPRs.length} PRs, ${sortedIssues.length} issues, ${sortedMerges.length} merges`);
 
       return {
         profile: {
+          id: profile.id,
           name: profile.name,
           bio: profile.bio,
           location: profile.location,
@@ -245,21 +588,154 @@ class GitHubService {
           followers: profile.followers,
           following: profile.following,
           createdAt: profile.created_at,
-          updatedAt: profile.updated_at
+          updatedAt: profile.updated_at,
+          hireable: profile.hireable,
+          twitterUsername: profile.twitter_username,
+          gravatarId: profile.gravatar_id
         },
         analytics: {
+          // Basic metrics
           totalCommits,
           totalPRs,
           totalIssues,
           totalMerges,
           emptyCommits,
-          programmingLanguages,
-          streak,
+          qualityCommits,
+          
+          // Repository metrics
           repoCount: repositories.length,
+          totalStars,
+          totalForks,
+          totalWatchers,
+          totalCodeSize,
+          
+          // Language and tech
+          programmingLanguages,
+          techStackBreadth: techStack.size,
+          
+          // Activity patterns
+          streak,
+          activityByMonth,
+          commitTimePatterns,
+          
+          // Quality and collaboration
+          codeQualityRatio: advancedMetrics.codeQualityRatio,
+          collaborationScore: advancedMetrics.collaborationScore,
+          communityImpact: advancedMetrics.communityImpact,
+          
+          // Advanced scores
           proficiencyScore,
-          lastAnalyzed: new Date()
+          consistencyScore: advancedMetrics.consistencyScore,
+          innovationScore: advancedMetrics.innovationScore,
+          
+          // Repository categorization
+          repoCategories,
+          
+          // Developer insights
+          developerInsights,
+          
+          // Analysis metadata
+          lastAnalyzed: new Date(),
+          analysisDepth: 'comprehensive',
+          repositoriesAnalyzed: repoDetails.length,
+          totalRepositories: repositories.length,
+
+          // Detailed statistics
+          commitStatistics: commitStats,
+          pullRequestStatistics: prStats,
+          issueStatistics: issueStats,
+          collaborationStatistics: collaborationStats
         },
-        repositories: repoDetails
+        repositories: repoDetails.sort((a, b) => (b.activityScore || 0) - (a.activityScore || 0)),
+        
+        // Detailed data collections
+        detailedData: {
+          commits: {
+            total: sortedCommits.length,
+            data: sortedCommits,
+            summary: {
+              qualityCommits: sortedCommits.filter(c => c.isQuality).length,
+              emptyCommits: sortedCommits.filter(c => !c.isQuality).length,
+              averageMessageLength: sortedCommits.reduce((sum, c) => sum + c.messageLength, 0) / sortedCommits.length || 0,
+              totalLinesChanged: sortedCommits.reduce((sum, c) => sum + (c.linesChanged || 0), 0),
+              repositoriesWithCommits: [...new Set(sortedCommits.map(c => c.repository))].length,
+              commitsByRepository: this.groupByRepository(sortedCommits),
+              commitsByMonth: this.groupByMonth(sortedCommits, 'author.date'),
+              commitsByAuthor: this.groupByAuthor(sortedCommits)
+            }
+          },
+          pullRequests: {
+            total: sortedPRs.length,
+            data: sortedPRs,
+            summary: {
+              merged: sortedPRs.filter(pr => pr.merged).length,
+              open: sortedPRs.filter(pr => pr.state === 'open').length,
+              closed: sortedPRs.filter(pr => pr.state === 'closed' && !pr.merged).length,
+              draft: sortedPRs.filter(pr => pr.draft).length,
+              totalAdditions: sortedPRs.reduce((sum, pr) => sum + (pr.additions || 0), 0),
+              totalDeletions: sortedPRs.reduce((sum, pr) => sum + (pr.deletions || 0), 0),
+              averageCommitsPerPR: sortedPRs.reduce((sum, pr) => sum + (pr.commits || 0), 0) / sortedPRs.length || 0,
+              repositoriesWithPRs: [...new Set(sortedPRs.map(pr => pr.repository))].length,
+              prsByRepository: this.groupByRepository(sortedPRs),
+              prsByMonth: this.groupByMonth(sortedPRs, 'created_at')
+            }
+          },
+          issues: {
+            total: sortedIssues.length,
+            data: sortedIssues,
+            summary: {
+              open: sortedIssues.filter(issue => issue.state === 'open').length,
+              closed: sortedIssues.filter(issue => issue.state === 'closed').length,
+              withAssignees: sortedIssues.filter(issue => issue.assignees.length > 0).length,
+              withLabels: sortedIssues.filter(issue => issue.labels.length > 0).length,
+              withMilestones: sortedIssues.filter(issue => issue.milestone).length,
+              averageComments: sortedIssues.reduce((sum, issue) => sum + (issue.comments || 0), 0) / sortedIssues.length || 0,
+              repositoriesWithIssues: [...new Set(sortedIssues.map(issue => issue.repository))].length,
+              issuesByRepository: this.groupByRepository(sortedIssues),
+              issuesByMonth: this.groupByMonth(sortedIssues, 'created_at'),
+              commonLabels: this.getCommonLabels(sortedIssues)
+            }
+          },
+          merges: {
+            total: sortedMerges.length,
+            data: sortedMerges,
+            summary: {
+              totalAdditions: sortedMerges.reduce((sum, merge) => sum + (merge.additions || 0), 0),
+              totalDeletions: sortedMerges.reduce((sum, merge) => sum + (merge.deletions || 0), 0),
+              averageFilesChanged: sortedMerges.reduce((sum, merge) => sum + (merge.changed_files || 0), 0) / sortedMerges.length || 0,
+              repositoriesWithMerges: [...new Set(sortedMerges.map(merge => merge.repository))].length,
+              mergesByRepository: this.groupByRepository(sortedMerges),
+              mergesByMonth: this.groupByMonth(sortedMerges, 'merged_at')
+            }
+          },
+          contributors: {
+            total: allContributors.length,
+            unique: [...new Set(allContributors.map(c => c.login))].length,
+            data: allContributors,
+            summary: {
+              topContributors: this.getTopContributors(allContributors),
+              contributorsByRepository: this.groupByRepository(allContributors),
+              averageContributionsPerRepo: allContributors.reduce((sum, c) => sum + c.contributions, 0) / allContributors.length || 0
+            }
+          },
+          languages: {
+            total: Object.keys(allLanguages).length,
+            data: allLanguages,
+            summary: {
+              totalBytes: totalLanguageBytes,
+              topLanguages: Object.entries(allLanguages)
+                .sort(([,a], [,b]) => b.totalBytes - a.totalBytes)
+                .slice(0, 10)
+                .map(([lang, data]) => ({
+                  language: lang,
+                  bytes: data.totalBytes,
+                  percentage: data.percentage,
+                  repositories: data.repositories.length
+                }))
+            }
+          },
+          repositoryStatistics: repositoryStats
+        }
       };
     } catch (error) {
       throw new Error(`Failed to analyze user activity: ${error.message}`);
@@ -770,74 +1246,87 @@ class GitHubService {
     return 'low';
   }
 
+  // Use advanced analytics methods
+  analyzeCommitQuality(commits) {
+    return AdvancedAnalytics.analyzeCommitQuality(commits);
+  }
+
+  analyzeActivityPatterns(commits) {
+    return AdvancedAnalytics.analyzeActivityPatterns(commits);
+  }
+
+  calculateRepoActivityScore(repo, commits, prs, issues) {
+    return AdvancedAnalytics.calculateRepoActivityScore(repo, commits, prs, issues);
+  }
+
+  calculateAdvancedStreak(commits) {
+    return AdvancedAnalytics.calculateAdvancedStreak(commits);
+  }
+
+  calculateConsistencyScore(activityByMonth) {
+    return AdvancedAnalytics.calculateConsistencyScore(activityByMonth);
+  }
+
+  calculateInnovationScore(repositories, techStack) {
+    return AdvancedAnalytics.calculateInnovationScore(repositories, techStack);
+  }
+
+  calculateAdvancedProficiencyScore(metrics) {
+    return AdvancedAnalytics.calculateAdvancedProficiencyScore(metrics);
+  }
+
+  // Data processing helper methods
+  isEmptyCommit(message) {
+    return DataProcessingHelpers.isEmptyCommit(message);
+  }
+
+  calculateAvgCommitsPerMonth(commits, repoCreatedAt) {
+    return DataProcessingHelpers.calculateAvgCommitsPerMonth(commits, repoCreatedAt);
+  }
+
+  generateCommitStatistics(commits) {
+    return DataProcessingHelpers.generateCommitStatistics(commits);
+  }
+
+  generatePRStatistics(prs) {
+    return DataProcessingHelpers.generatePRStatistics(prs);
+  }
+
+  generateIssueStatistics(issues) {
+    return DataProcessingHelpers.generateIssueStatistics(issues);
+  }
+
+  generateCollaborationStatistics(contributors) {
+    return DataProcessingHelpers.generateCollaborationStatistics(contributors);
+  }
+
+  groupByRepository(items) {
+    return DataProcessingHelpers.groupByRepository(items);
+  }
+
+  groupByMonth(items, dateField) {
+    return DataProcessingHelpers.groupByMonth(items, dateField);
+  }
+
+  groupByAuthor(commits) {
+    return DataProcessingHelpers.groupByAuthor(commits);
+  }
+
+  getTopContributors(contributors) {
+    return DataProcessingHelpers.getTopContributors(contributors);
+  }
+
+  getCommonLabels(issues) {
+    return DataProcessingHelpers.getCommonLabels(issues);
+  }
+
+  // Legacy methods for backward compatibility
   calculateStreak(commits) {
-    if (!commits.length) return { current: 0, longest: 0 };
-
-    const commitDates = commits.map(commit => 
-      moment(commit.commit.author.date).format('YYYY-MM-DD')
-    );
-    
-    const uniqueDates = [...new Set(commitDates)].sort();
-    
-    let currentStreak = 0;
-    let longestStreak = 0;
-    let tempStreak = 1;
-
-    for (let i = 1; i < uniqueDates.length; i++) {
-      const prevDate = moment(uniqueDates[i - 1]);
-      const currentDate = moment(uniqueDates[i]);
-      
-      if (currentDate.diff(prevDate, 'days') === 1) {
-        tempStreak++;
-      } else {
-        longestStreak = Math.max(longestStreak, tempStreak);
-        tempStreak = 1;
-      }
-    }
-    
-    longestStreak = Math.max(longestStreak, tempStreak);
-    
-    // Calculate current streak from today backwards
-    const today = moment().format('YYYY-MM-DD');
-    const lastCommitDate = uniqueDates[uniqueDates.length - 1];
-    
-    if (moment(today).diff(moment(lastCommitDate), 'days') <= 1) {
-      currentStreak = tempStreak;
-    }
-
-    return { current: currentStreak, longest: longestStreak };
+    return this.calculateAdvancedStreak(commits);
   }
 
   calculateProficiencyScore(data) {
-    const {
-      totalCommits,
-      totalPRs,
-      repositories,
-      languages,
-      emptyCommits,
-      totalMerges
-    } = data;
-
-    let score = 0;
-
-    // Commit quality (40% of score)
-    const commitQuality = totalCommits > 0 ? 
-      Math.max(0, (totalCommits - emptyCommits) / totalCommits) : 0;
-    score += commitQuality * 40;
-
-    // Repository diversity (20% of score)
-    const repoDiversity = Math.min(repositories / 10, 1) * 20;
-    score += repoDiversity;
-
-    // Language proficiency (20% of score)
-    const langProficiency = Math.min(languages / 5, 1) * 20;
-    score += langProficiency;
-
-    // Collaboration (20% of score)
-    const collaboration = Math.min((totalPRs + totalMerges) / 20, 1) * 20;
-    score += collaboration;
-
-    return Math.round(score);
+    return this.calculateAdvancedProficiencyScore(data);
   }
 }
 

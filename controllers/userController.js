@@ -81,47 +81,95 @@ const userController = {
       // Analyze user with GitHub API
       const analysisData = await githubService.analyzeUserActivity(username);
 
+      // Debug: Check if profile.id exists
+      console.log('Profile ID:', analysisData.profile?.id);
+
+      // Ensure githubId is available
+      if (!analysisData.profile?.id) {
+        console.warn('GitHub profile ID is missing, using fallback');
+      }
+
       // Generate AI insights
       const aiInsights = await aiService.generateInsights({
         username,
         ...analysisData
       });
 
+      // Get developer level
+      const developerLevel = getDeveloperLevel(analysisData.analytics);
+      console.log('Developer Level:', developerLevel);
+
       // Check if user already exists
       let user = await GitHubUser.findOne({ username });
 
       if (user) {
+        // Check if level changed
+        const oldDeveloperLevel = user.developerLevel;
+        const levelChanged = oldDeveloperLevel?.level !== developerLevel.level;
+
         // Update existing user
-        user.githubId = analysisData.profile.id || user.githubId;
+        user.githubId = analysisData.profile.id || user.githubId || Date.now();
         user.profile = analysisData.profile;
         user.analytics = analysisData.analytics;
         user.repositories = analysisData.repositories;
         user.aiInsights = aiInsights;
+        user.developerLevel = developerLevel;
 
         await user.save();
+
+        // Send level up email if level changed
+        if (levelChanged && user.profile.email) {
+          try {
+            await sendEmail(
+              user.profile.email,
+              `🎉 Level Up! You're now a ${developerLevel.name}!`,
+              levelUpEmailTemplate(user.profile.name || username, oldDeveloperLevel, developerLevel)
+            );
+          } catch (emailError) {
+            console.error('Failed to send level up email:', emailError.message);
+          }
+        }
 
         res.status(200).json({
           success: true,
           data: user,
-          message: 'User analysis updated successfully'
+          message: 'User analysis updated successfully',
+          levelChanged,
+          newLevel: levelChanged ? developerLevel : null
         });
       } else {
         // Create new user
         const newUser = new GitHubUser({
           username,
-          githubId: analysisData.profile.id,
+          githubId: analysisData.profile.id || Date.now(),
           profile: analysisData.profile,
           analytics: analysisData.analytics,
           repositories: analysisData.repositories,
-          aiInsights
+          aiInsights,
+          developerLevel
         });
 
         await newUser.save();
 
+        // Send onboarding email if email is available
+        if (newUser.profile.email) {
+          try {
+            await sendEmail(
+              newUser.profile.email,
+              '🎯 Profile Analysis Complete - Welcome to GitStake!',
+              onboardingEmailTemplate(newUser.profile.name || username, username)
+            );
+          } catch (emailError) {
+            console.error('Failed to send onboarding email:', emailError.message);
+          }
+        }
+
         res.status(201).json({
           success: true,
           data: newUser,
-          message: 'User analyzed and created successfully'
+          message: 'User analyzed and created successfully',
+          isNewUser: true,
+          developerLevel
         });
       }
     } catch (error) {

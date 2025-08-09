@@ -81,31 +81,41 @@ A comprehensive Node.js Express server that analyzes GitHub profiles using AI, p
 │   ├── githubController.js      # Complete GitHub API operations
 │   ├── chatController.js        # Standard AI chat assistant
 │   ├── deepSearchController.js  # Web search + AI responses
-│   └── emailController.js       # Email notification system
+│   ├── emailController.js       # Email notification system
+│   ├── questController.js       # Quest system management
+│   └── cronController.js        # Cron job management
 ├── middleware/          # Custom middleware
 │   ├── errorHandler.js          # Global error handling
 │   ├── notFound.js              # 404 handler
-│   └── validateGitHubUser.js    # GitHub user validation
+│   ├── validateGitHubUser.js    # GitHub user validation
+│   └── validateUser.js          # General user validation
 ├── models/              # MongoDB schemas & enums
 │   ├── GitHubUser.js            # User data schema with detailed analytics
-│   └── DeveloperLevel.js        # Developer progression system
+│   ├── DeveloperLevel.js        # Developer progression system
+│   └── Quest.js                 # Quest system schema
 ├── routes/              # API route definitions
 │   ├── authRoutes.js            # Authentication endpoints
 │   ├── userRoutes.js            # User management and analytics
 │   ├── githubRoutes.js          # GitHub API integration endpoints
 │   ├── chatRoutes.js            # Standard AI chat endpoints
 │   ├── deepSearchRoutes.js      # Deep search AI endpoints
-│   └── emailRoutes.js           # Email notification endpoints
+│   ├── emailRoutes.js           # Email notification endpoints
+│   ├── questRoutes.js           # Quest system endpoints
+│   └── cronRoutes.js            # Cron job management endpoints
 ├── services/            # External service integrations
 │   ├── githubService.js         # Comprehensive GitHub API integration
 │   ├── aiService.js             # Standard AI insights generation
 │   ├── chatService.js           # GitStake AI Assistant
 │   ├── deepSearchAIService.js   # Web search + AI service
 │   ├── emailService.js          # Email delivery service
+│   ├── questService.js          # Quest generation and management
+│   ├── cronService.js           # Automated job scheduling
 │   ├── advancedAnalytics.js     # Advanced analytics calculations
 │   └── dataProcessingHelpers.js # Data processing utilities
 ├── templates/           # Email templates
 │   └── emailTemplates.js        # Beautiful responsive email designs
+├── tests/               # Test files
+│   └── test-ai-quest-generation.js # Quest generation testing
 ├── .env                 # Environment variables
 ├── .gitignore          # Git ignore rules
 ├── package.json        # Dependencies and scripts
@@ -113,6 +123,12 @@ A comprehensive Node.js Express server that analyzes GitHub profiles using AI, p
 ├── vercel.json         # Vercel deployment config
 ├── GITHUB_TOKEN_SETUP.md # GitHub token setup guide
 ├── GitStake-API.postman_collection.json # Complete API collection
+├── QUEST_POSTMAN_ENDPOINTS.json # Quest system API collection
+├── CRON_POSTMAN_ENDPOINTS.json # Cron job API collection
+├── QUEST_SYSTEM_README.md # Quest system documentation
+├── QUEST_API_DOCUMENTATION.md # Quest API documentation
+├── ENHANCED_QUEST_SYSTEM_SUMMARY.md # Quest system summary
+├── IMPLEMENTATION_SUMMARY.md # Implementation overview
 └── README.md           # This file
 ```
 
@@ -138,6 +154,8 @@ EMAIL=your_email@gmail.com
 EMAIL_PASSWORD=your_app_password_here
 ```
 
+**Note**: The current implementation uses MongoDB Atlas cloud database. For local development, you can use a local MongoDB instance or continue using the cloud database.
+
 ### 3. GitHub Token Setup
 1. Go to GitHub Settings → Developer settings → Personal access tokens
 2. Generate a new token with these scopes:
@@ -152,8 +170,9 @@ EMAIL_PASSWORD=your_app_password_here
 3. Add your email and app password to the `.env` file
 
 ### 5. Database Setup
-- **Local MongoDB**: Ensure MongoDB is running locally
-- **MongoDB Atlas**: Use the connection string format in `.env`
+- **MongoDB Atlas (Current)**: The project is currently configured to use MongoDB Atlas cloud database
+- **Local MongoDB**: For local development, you can change the `MONGODB_URI` to `mongodb://localhost:27017/gitstake`
+- **Connection**: The database connection is handled in `config/database.js`
 
 ### 6. Start the Server
 ```bash
@@ -192,12 +211,12 @@ npm start
 
 #### Pull Requests & Issues
 - `GET /api/github/repos/:owner/:repo/pulls` - Pull requests with details
-- `GET /api/github/repos/:owner/:repo/pulls/:number` - Specific PR details
-- `GET /api/github/repos/:owner/:repo/pulls/:number/commits` - PR commits
-- `GET /api/github/repos/:owner/:repo/pulls/:number/files` - PR file changes
+- `GET /api/github/repos/:owner/:repo/pulls/:pull_number` - Specific PR details
+- `GET /api/github/repos/:owner/:repo/pulls/:pull_number/commits` - PR commits
+- `GET /api/github/repos/:owner/:repo/pulls/:pull_number/files` - PR file changes
 - `GET /api/github/repos/:owner/:repo/issues` - Repository issues
-- `GET /api/github/repos/:owner/:repo/issues/:number` - Specific issue
-- `GET /api/github/repos/:owner/:repo/issues/:number/comments` - Issue comments
+- `GET /api/github/repos/:owner/:repo/issues/:issue_number` - Specific issue
+- `GET /api/github/repos/:owner/:repo/issues/:issue_number/comments` - Issue comments
 
 #### Advanced Analytics
 - `GET /api/github/analytics/:username/complexity` - Code complexity analysis
@@ -260,12 +279,15 @@ npm start
 - `POST /api/quests/send-notifications` - Send quest notifications (admin)
 - `POST /api/quests/auto-generate-weekly` - Auto-generate weekly quests (cron)
 - `POST /api/quests/:questId/process-results` - Process quest results (admin)
+- `POST /api/quests/process-all-closed` - Process all closed quests (admin)
 
 ### ⏰ Cron Job Management
-- `GET /api/cron/status` - Get cron job status
-- `POST /api/cron/start-all` - Start all automated jobs
-- `POST /api/cron/stop-all` - Stop all automated jobs
-- `POST /api/cron/trigger/:jobName` - Manually trigger specific job
+- `GET /api/cron/status` - Get cron jobs status
+- `POST /api/cron/start-all` - Start all cron jobs
+- `POST /api/cron/stop-all` - Stop all cron jobs
+- `POST /api/cron/start/:jobName` - Start specific cron job
+- `POST /api/cron/stop/:jobName` - Stop specific cron job
+- `POST /api/cron/trigger/:jobName` - Manually trigger cron job
 
 ### 🔐 Authentication
 - `POST /api/auth/login` - User authentication
@@ -273,6 +295,7 @@ npm start
 - `POST /api/auth/logout` - User logout
 
 ### 🏥 System Health & Info
+- `GET /` - Server welcome message
 - `GET /health` - Server health status with environment info
 - `GET /api` - Complete API documentation with all endpoints
 
@@ -522,6 +545,7 @@ The quest system automatically scales problem difficulty based on developer leve
 ## 🤖 Dual AI System Integration
 
 ### 🎯 Standard AI Service (Profile Analysis)
+- **Pollinations AI Integration**: Uses `https://text.pollinations.ai/` with OpenAI-fast model for AI-powered insights
 - **Human-Like Analysis**: Natural language insights without robotic phrases or AI jargon
 - **Platform-Specific Knowledge**: Deep understanding of GitStake features and developer progression
 - **Personalized Growth Guidance**: Tailored advice for reaching the next developer level
@@ -534,6 +558,7 @@ The quest system automatically scales problem difficulty based on developer leve
 - **Source Attribution**: Reliable source citations for all information provided
 - **Current Technology Insights**: Up-to-date information on development trends, tools, and best practices
 - **Context-Aware Responses**: Relates web search results back to GitStake features and user growth
+- **Fallback Handling**: Graceful degradation when external services are unavailable
 
 ### 💬 Intelligent Chat Capabilities
 - **Natural Conversation Flow**: Human-like responses that avoid typical AI language patterns
@@ -580,18 +605,39 @@ npm start
 ### Environment Variables
 - `PORT`: Server port (default: 3000)
 - `NODE_ENV`: Environment (development/production)
-- `MONGODB_URI`: MongoDB connection string
+- `MONGODB_URI`: MongoDB connection string (currently using MongoDB Atlas)
 - `GITHUB_TOKEN`: GitHub Personal Access Token
-- `POLLINATIONS_API_URL`: AI service endpoint
+- `POLLINATIONS_API_URL`: AI service endpoint (https://text.pollinations.ai/)
 - `EMAIL`: Gmail address for notifications
 - `EMAIL_PASSWORD`: Gmail app password
 
 ### Deployment Considerations
-- **MongoDB Atlas**: Cloud database for production
+- **Vercel Deployment**: Configured with `vercel.json` for serverless deployment (Note: Update vercel.json to use server.js instead of index.js)
+- **MongoDB Atlas**: Cloud database for production (already configured)
 - **Environment Security**: Secure token and credential management
-- **Rate Limiting**: GitHub API quota management
-- **Error Monitoring**: Comprehensive logging and monitoring
-- **Scalability**: Horizontal scaling considerations
+- **Rate Limiting**: GitHub API quota management (5000 requests/hour)
+- **Error Monitoring**: Comprehensive logging and monitoring with Morgan
+- **Scalability**: Serverless architecture with Vercel
+
+### Vercel Configuration Fix
+The current `vercel.json` references `index.js` but should reference `server.js`:
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ]
+}
+```
 
 ## 🤝 Contributing
 
@@ -607,11 +653,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **GitHub API**: Comprehensive developer data
-- **Octokit**: Excellent GitHub API client
-- **Pollinations AI**: AI-powered insights
-- **MongoDB**: Reliable data storage
-- **Express.js**: Robust web framework
+- **GitHub API**: Comprehensive developer data via Octokit REST API
+- **Octokit (@octokit/rest)**: Excellent GitHub API client for Node.js
+- **Pollinations AI**: AI-powered insights and quest generation
+- **MongoDB & Mongoose**: Reliable NoSQL database and ODM
+- **Express.js**: Fast, unopinionated web framework for Node.js
+- **Axios**: Promise-based HTTP client for API requests
+- **Nodemailer**: Email sending capabilities
+- **Node-cron**: Task scheduling for automated jobs
+- **Helmet**: Security middleware for Express
+- **Morgan**: HTTP request logger middleware
+- **Moment.js**: Date manipulation and formatting
+- **Lodash**: Utility library for JavaScript
 
 ## 🚀 What Makes GitStake Special
 

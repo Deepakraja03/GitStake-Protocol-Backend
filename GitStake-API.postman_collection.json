@@ -1,1589 +1,1866 @@
 {
-	"info": {
-		"_postman_id": "gitstake-api-collection",
-		"name": "GitStake API Collection",
-		"description": "Comprehensive API collection for GitStake - GitHub Analytics & Developer Recognition Platform",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "gitstake-platform"
-	},
-	"item": [
-		{
-			"name": "System Health",
-			"item": [
-				{
-					"name": "Health Check",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/health",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"health"
-							]
-						},
-						"description": "Check server health status"
-					}
-				},
-				{
-					"name": "API Info",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api"
-							]
-						},
-						"description": "Get API documentation and available endpoints"
-					}
-				}
-			],
-			"description": "System health and information endpoints"
-		},
-		{
-			"name": "User Analytics",
-			"item": [
-				{
-					"name": "Get All Users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/users?page=1&limit=10&sortBy=createdAt&order=desc",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								},
-								{
-									"key": "sortBy",
-									"value": "createdAt"
-								},
-								{
-									"key": "order",
-									"value": "desc"
-								}
-							]
-						},
-						"description": "Get all analyzed users with pagination"
-					}
-				},
-				{
-					"name": "Get User by Username",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/users/{{username}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"{{username}}"
-							]
-						},
-						"description": "Get specific user's complete data"
-					}
-				},
-				{
-					"name": "Get User Analytics",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/users/{{username}}/analytics",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"{{username}}",
-								"analytics"
-							]
-						},
-						"description": "Get user's analytics summary with developer level"
-					}
-				},
-				{
-					"name": "Analyze GitHub User",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"username\": \"octocat\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/users/analyze",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"analyze"
-							]
-						},
-						"description": "Analyze a GitHub user and create/update their profile"
-					}
-				},
-				{
-					"name": "Update User Analytics",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/users/{{username}}/update",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"{{username}}",
-								"update"
-							]
-						},
-						"description": "Refresh user's analytics data"
-					}
-				},
-				{
-					"name": "Delete User",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/users/{{username}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"{{username}}"
-							]
-						},
-						"description": "Delete user data from the system"
-					}
-				},
-				{
-					"name": "Get Leaderboard",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/users/leaderboard?metric=proficiencyScore&limit=10",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"leaderboard"
-							],
-							"query": [
-								{
-									"key": "metric",
-									"value": "proficiencyScore",
-									"description": "Options: proficiencyScore, totalCommits, repoCount, totalPRs, streak.longest"
-								},
-								{
-									"key": "limit",
-									"value": "10"
-								}
-							]
-						},
-						"description": "Get user leaderboard by various metrics"
-					}
-				}
-			],
-			"description": "User analytics and management endpoints"
-		},
-		{
-			"name": "GitHub API Integration",
-			"item": [
-				{
-					"name": "Profile",
-					"item": [
-						{
-							"name": "Get GitHub Profile",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/profile/{{username}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"profile",
-										"{{username}}"
-									]
-								},
-								"description": "Get GitHub user profile information"
-							}
-						},
-						{
-							"name": "Get Profile Events",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/profile/{{username}}/events?page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"profile",
-										"{{username}}",
-										"events"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get user's recent GitHub events"
-							}
-						},
-						{
-							"name": "Get Followers",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/profile/{{username}}/followers?page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"profile",
-										"{{username}}",
-										"followers"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get user's followers"
-							}
-						},
-						{
-							"name": "Get Following",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/profile/{{username}}/following?page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"profile",
-										"{{username}}",
-										"following"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get users that the user is following"
-							}
-						}
-					],
-					"description": "GitHub profile related endpoints"
-				},
-				{
-					"name": "Repositories",
-					"item": [
-						{
-							"name": "Get User Repositories",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{username}}?type=owner&sort=updated&per_page=30&page=1",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{username}}"
-									],
-									"query": [
-										{
-											"key": "type",
-											"value": "owner"
-										},
-										{
-											"key": "sort",
-											"value": "updated"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										}
-									]
-								},
-								"description": "Get user's repositories"
-							}
-						},
-						{
-							"name": "Get Repository Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}"
-									]
-								},
-								"description": "Get specific repository details"
-							}
-						},
-						{
-							"name": "Get Repository Commits",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/commits?author={{username}}&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"commits"
-									],
-									"query": [
-										{
-											"key": "author",
-											"value": "{{username}}"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get repository commits"
-							}
-						},
-						{
-							"name": "Get Repository Contributors",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/contributors",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"contributors"
-									]
-								},
-								"description": "Get repository contributors"
-							}
-						},
-						{
-							"name": "Get Repository Languages",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/languages",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"languages"
-									]
-								},
-								"description": "Get repository programming languages"
-							}
-						},
-						{
-							"name": "Get Repository Stats",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/stats",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"stats"
-									]
-								},
-								"description": "Get repository statistics"
-							}
-						}
-					],
-					"description": "Repository management endpoints"
-				},
-				{
-					"name": "Pull Requests",
-					"item": [
-						{
-							"name": "Get Repository Pull Requests",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls?state=all&sort=created&direction=desc&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"pulls"
-									],
-									"query": [
-										{
-											"key": "state",
-											"value": "all"
-										},
-										{
-											"key": "sort",
-											"value": "created"
-										},
-										{
-											"key": "direction",
-											"value": "desc"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get repository pull requests"
-							}
-						},
-						{
-							"name": "Get Pull Request Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls/{{pull_number}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"pulls",
-										"{{pull_number}}"
-									]
-								},
-								"description": "Get specific pull request details"
-							}
-						},
-						{
-							"name": "Get Pull Request Commits",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls/{{pull_number}}/commits",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"pulls",
-										"{{pull_number}}",
-										"commits"
-									]
-								},
-								"description": "Get pull request commits"
-							}
-						},
-						{
-							"name": "Get Pull Request Files",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls/{{pull_number}}/files",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"pulls",
-										"{{pull_number}}",
-										"files"
-									]
-								},
-								"description": "Get pull request changed files"
-							}
-						}
-					],
-					"description": "Pull request management endpoints"
-				},
-				{
-					"name": "Issues",
-					"item": [
-						{
-							"name": "Get Repository Issues",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/issues?state=all&sort=created&direction=desc&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"issues"
-									],
-									"query": [
-										{
-											"key": "state",
-											"value": "all"
-										},
-										{
-											"key": "sort",
-											"value": "created"
-										},
-										{
-											"key": "direction",
-											"value": "desc"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get repository issues"
-							}
-						},
-						{
-							"name": "Get Issue Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/issues/{{issue_number}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"issues",
-										"{{issue_number}}"
-									]
-								},
-								"description": "Get specific issue details"
-							}
-						},
-						{
-							"name": "Get Issue Comments",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/issues/{{issue_number}}/comments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"repos",
-										"{{owner}}",
-										"{{repo}}",
-										"issues",
-										"{{issue_number}}",
-										"comments"
-									]
-								},
-								"description": "Get issue comments"
-							}
-						}
-					],
-					"description": "Issue management endpoints"
-				},
-				{
-					"name": "Advanced Analytics",
-					"item": [
-						{
-							"name": "Get Code Complexity",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/analytics/{{username}}/complexity",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"analytics",
-										"{{username}}",
-										"complexity"
-									]
-								},
-								"description": "Get code complexity analysis for user"
-							}
-						},
-						{
-							"name": "Get Activity Analytics",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/analytics/{{username}}/activity?timeframe=1year",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"analytics",
-										"{{username}}",
-										"activity"
-									],
-									"query": [
-										{
-											"key": "timeframe",
-											"value": "1year"
-										}
-									]
-								},
-								"description": "Get activity analytics with developer level"
-							}
-						},
-						{
-							"name": "Get Collaboration Metrics",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/analytics/{{username}}/collaboration",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"analytics",
-										"{{username}}",
-										"collaboration"
-									]
-								},
-								"description": "Get collaboration metrics for user"
-							}
-						},
-						{
-							"name": "Get Code Quality",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/analytics/{{username}}/quality",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"analytics",
-										"{{username}}",
-										"quality"
-									]
-								},
-								"description": "Get code quality analysis"
-							}
-						},
-						{
-							"name": "Get Trend Analysis",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/analytics/{{username}}/trends?period=6months",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"analytics",
-										"{{username}}",
-										"trends"
-									],
-									"query": [
-										{
-											"key": "period",
-											"value": "6months"
-										}
-									]
-								},
-								"description": "Get trend analysis for user activity"
-							}
-						}
-					],
-					"description": "Advanced analytics endpoints"
-				},
-				{
-					"name": "Search",
-					"item": [
-						{
-							"name": "Search Repositories",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/search/repositories?q=javascript&sort=stars&order=desc&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"search",
-										"repositories"
-									],
-									"query": [
-										{
-											"key": "q",
-											"value": "javascript"
-										},
-										{
-											"key": "sort",
-											"value": "stars"
-										},
-										{
-											"key": "order",
-											"value": "desc"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Search GitHub repositories"
-							}
-						},
-						{
-							"name": "Search Users",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/search/users?q=developer&sort=followers&order=desc&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"search",
-										"users"
-									],
-									"query": [
-										{
-											"key": "q",
-											"value": "developer"
-										},
-										{
-											"key": "sort",
-											"value": "followers"
-										},
-										{
-											"key": "order",
-											"value": "desc"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Search GitHub users"
-							}
-						},
-						{
-							"name": "Search Code",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/search/code?q=function+language:javascript&sort=indexed&order=desc&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"search",
-										"code"
-									],
-									"query": [
-										{
-											"key": "q",
-											"value": "function+language:javascript"
-										},
-										{
-											"key": "sort",
-											"value": "indexed"
-										},
-										{
-											"key": "order",
-											"value": "desc"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Search code on GitHub"
-							}
-						}
-					],
-					"description": "GitHub search endpoints"
-				},
-				{
-					"name": "Organizations & Gists",
-					"item": [
-						{
-							"name": "Get Organization",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/orgs/{{org}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"orgs",
-										"{{org}}"
-									]
-								},
-								"description": "Get organization details"
-							}
-						},
-						{
-							"name": "Get Organization Repos",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/orgs/{{org}}/repos?type=all&sort=updated&page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"orgs",
-										"{{org}}",
-										"repos"
-									],
-									"query": [
-										{
-											"key": "type",
-											"value": "all"
-										},
-										{
-											"key": "sort",
-											"value": "updated"
-										},
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get organization repositories"
-							}
-						},
-						{
-							"name": "Get Organization Members",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/orgs/{{org}}/members?page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"orgs",
-										"{{org}}",
-										"members"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get organization members"
-							}
-						},
-						{
-							"name": "Get User Gists",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/gists/{{username}}?page=1&per_page=30",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"gists",
-										"{{username}}"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "1"
-										},
-										{
-											"key": "per_page",
-											"value": "30"
-										}
-									]
-								},
-								"description": "Get user's gists"
-							}
-						},
-						{
-							"name": "Get Gist Details",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/api/github/gists/{{gist_id}}",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"github",
-										"gists",
-										"{{gist_id}}"
-									]
-								},
-								"description": "Get specific gist details"
-							}
-						}
-					],
-					"description": "Organization and gist endpoints"
-				},
-				{
-					"name": "Rate Limit",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/github/rate-limit",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"github",
-								"rate-limit"
-							]
-						},
-						"description": "Get GitHub API rate limit status"
-					}
-				}
-			],
-			"description": "Complete GitHub API integration endpoints"
-		},
-		{
-			"name": "AI Chat Assistant",
-			"item": [
-				{
-					"name": "Ask GitStake Assistant",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"message\": \"How do I improve my developer level from Code Builder to Code Craftsman?\",\n  \"context\": {\n    \"username\": \"octocat\"\n  }\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/chat/ask",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"chat",
-								"ask"
-							]
-						},
-						"description": "Ask the GitStake AI Assistant for help and guidance"
-					}
-				},
-				{
-					"name": "Get Assistant Health",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/chat/health",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"chat",
-								"health"
-							]
-						},
-						"description": "Check AI assistant service health"
-					}
-				}
-			],
-			"description": "AI-powered chat assistant endpoints"
-		},
-		{
-			"name": "Email Notifications",
-			"item": [
-				{
-					"name": "Send Registration Email",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/email/send-registration",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"send-registration"
-							]
-						},
-						"description": "Send welcome registration email"
-					}
-				},
-				{
-					"name": "Send Level Up Email",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\",\n  \"oldLevel\": {\n    \"name\": \"Code Builder\",\n    \"emoji\": \"🔨\"\n  },\n  \"newLevel\": {\n    \"name\": \"Code Craftsman\",\n    \"emoji\": \"⚡\",\n    \"description\": \"Crafting quality code with growing expertise\"\n  }\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/email/send-level-up",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"send-level-up"
-							]
-						},
-						"description": "Send level up achievement email"
-					}
-				},
-				{
-					"name": "Send Onboarding Email",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\",\n  \"githubUsername\": \"johndev\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/email/send-onboarding",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"send-onboarding"
-							]
-						},
-						"description": "Send profile analysis completion email"
-					}
-				},
-				{
-					"name": "Send Leaderboard Email",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\",\n  \"rank\": \"5\",\n  \"metric\": \"Proficiency Score\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/email/send-leaderboard",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"send-leaderboard"
-							]
-						},
-						"description": "Send leaderboard achievement email"
-					}
-				},
-				{
-					"name": "Preview Registration Email",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/email/preview/registration?name=John Developer",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"preview",
-								"registration"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "John Developer"
-								}
-							]
-						},
-						"description": "Preview registration email template"
-					}
-				},
-				{
-					"name": "Preview Level Up Email",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/email/preview/level-up?name=Jane Coder",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"preview",
-								"level-up"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "Jane Coder"
-								}
-							]
-						},
-						"description": "Preview level up email template"
-					}
-				},
-				{
-					"name": "Preview Onboarding Email",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/email/preview/onboarding?name=Alex Developer&githubUsername=alexdev",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"preview",
-								"onboarding"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "Alex Developer"
-								},
-								{
-									"key": "githubUsername",
-									"value": "alexdev"
-								}
-							]
-						},
-						"description": "Preview onboarding email template"
-					}
-				},
-				{
-					"name": "Preview Leaderboard Email",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/email/preview/leaderboard?name=Sarah Coder&rank=5&metric=Proficiency Score",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"email",
-								"preview",
-								"leaderboard"
-							],
-							"query": [
-								{
-									"key": "name",
-									"value": "Sarah Coder"
-								},
-								{
-									"key": "rank",
-									"value": "5"
-								},
-								{
-									"key": "metric",
-									"value": "Proficiency Score"
-								}
-							]
-						},
-						"description": "Preview leaderboard email template"
-					}
-				}
-			],
-			"description": "Email notification system endpoints"
-		},
-		{
-			"name": "Authentication",
-			"item": [
-				{
-					"name": "User Login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/auth/login",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						},
-						"description": "User login endpoint"
-					}
-				},
-				{
-					"name": "User Registration",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"John Developer\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/api/auth/register",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
-						},
-						"description": "User registration endpoint"
-					}
-				},
-				{
-					"name": "User Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/api/auth/logout",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"logout"
-							]
-						},
-						"description": "User logout endpoint"
-					}
-				}
-			],
-			"description": "Authentication endpoints"
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "http://localhost:3000",
-			"type": "string"
-		},
-		{
-			"key": "username",
-			"value": "octocat",
-			"type": "string"
-		},
-		{
-			"key": "owner",
-			"value": "octocat",
-			"type": "string"
-		},
-		{
-			"key": "repo",
-			"value": "Hello-World",
-			"type": "string"
-		},
-		{
-			"key": "pull_number",
-			"value": "1",
-			"type": "string"
-		},
-		{
-			"key": "issue_number",
-			"value": "1",
-			"type": "string"
-		},
-		{
-			"key": "org",
-			"value": "github",
-			"type": "string"
-		},
-		{
-			"key": "gist_id",
-			"value": "example-gist-id",
-			"type": "string"
-		}
-	]
+    "info": {
+        "_postman_id": "gitstake-api-collection",
+        "name": "GitStake API Collection",
+        "description": "Complete API collection for GitStake - Advanced GitHub Analytics & Developer Recognition Platform with Dual AI System and Deep Search Capabilities",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "gitstake-platform"
+    },
+    "item": [
+        {
+            "name": "System Health",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check server health status"
+                    }
+                },
+                {
+                    "name": "API Info",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api"
+                            ]
+                        },
+                        "description": "Get API documentation and available endpoints"
+                    }
+                }
+            ],
+            "description": "System health and information endpoints"
+        },
+        {
+            "name": "User Analytics",
+            "item": [
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users?page=1&limit=10&sortBy=createdAt&order=desc",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "sortBy",
+                                    "value": "createdAt"
+                                },
+                                {
+                                    "key": "order",
+                                    "value": "desc"
+                                }
+                            ]
+                        },
+                        "description": "Get all analyzed users with pagination"
+                    }
+                },
+                {
+                    "name": "Get User by Username",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{username}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{username}}"
+                            ]
+                        },
+                        "description": "Get specific user's complete data"
+                    }
+                },
+                {
+                    "name": "Get User Analytics",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{username}}/analytics",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{username}}",
+                                "analytics"
+                            ]
+                        },
+                        "description": "Get user's comprehensive analytics summary with developer level, insights, and detailed metrics"
+                    }
+                },
+                {
+                    "name": "Analyze GitHub User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"{{username}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/analyze",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "analyze"
+                            ]
+                        },
+                        "description": "Comprehensive GitHub user analysis with 50+ metrics, detailed data collections, developer level assessment, and AI insights"
+                    }
+                },
+                {
+                    "name": "Update User Analytics",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{username}}/update",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{username}}",
+                                "update"
+                            ]
+                        },
+                        "description": "Refresh user's analytics data"
+                    }
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/{{username}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "{{username}}"
+                            ]
+                        },
+                        "description": "Delete user data from the system"
+                    }
+                },
+                {
+                    "name": "Get Leaderboard",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/leaderboard?metric=proficiencyScore&limit=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "leaderboard"
+                            ],
+                            "query": [
+                                {
+                                    "key": "metric",
+                                    "value": "proficiencyScore",
+                                    "description": "Options: proficiencyScore, totalCommits, repoCount, totalPRs, streak.longest, innovationScore, collaborationScore"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        },
+                        "description": "Multi-metric leaderboard with developer levels and comprehensive ranking"
+                    }
+                }
+            ],
+            "description": "User analytics and management with comprehensive GitHub analysis and developer progression"
+        },
+        {
+            "name": "GitHub API Integration",
+            "item": [
+                {
+                    "name": "Profile",
+                    "item": [
+                        {
+                            "name": "Get GitHub Profile",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/profile/{{username}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "profile",
+                                        "{{username}}"
+                                    ]
+                                },
+                                "description": "Get GitHub user profile information"
+                            }
+                        },
+                        {
+                            "name": "Get Profile Events",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/profile/{{username}}/events?page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "profile",
+                                        "{{username}}",
+                                        "events"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get user's recent GitHub events"
+                            }
+                        },
+                        {
+                            "name": "Get Followers",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/profile/{{username}}/followers?page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "profile",
+                                        "{{username}}",
+                                        "followers"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get user's followers"
+                            }
+                        },
+                        {
+                            "name": "Get Following",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/profile/{{username}}/following?page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "profile",
+                                        "{{username}}",
+                                        "following"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get users that the user is following"
+                            }
+                        }
+                    ],
+                    "description": "GitHub profile related endpoints"
+                },
+                {
+                    "name": "Repositories",
+                    "item": [
+                        {
+                            "name": "Get User Repositories",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{username}}?type=owner&sort=updated&per_page=30&page=1",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{username}}"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "type",
+                                            "value": "owner"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "updated"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        }
+                                    ]
+                                },
+                                "description": "Get user's repositories"
+                            }
+                        },
+                        {
+                            "name": "Get Repository Details",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}"
+                                    ]
+                                },
+                                "description": "Get specific repository details"
+                            }
+                        },
+                        {
+                            "name": "Get Repository Commits",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/commits?author={{username}}&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "commits"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "author",
+                                            "value": "{{username}}"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get repository commits"
+                            }
+                        },
+                        {
+                            "name": "Get Repository Contributors",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/contributors",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "contributors"
+                                    ]
+                                },
+                                "description": "Get repository contributors"
+                            }
+                        },
+                        {
+                            "name": "Get Repository Languages",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/languages",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "languages"
+                                    ]
+                                },
+                                "description": "Get repository programming languages"
+                            }
+                        },
+                        {
+                            "name": "Get Repository Stats",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/stats",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "stats"
+                                    ]
+                                },
+                                "description": "Get repository statistics"
+                            }
+                        }
+                    ],
+                    "description": "Repository management endpoints"
+                },
+                {
+                    "name": "Pull Requests",
+                    "item": [
+                        {
+                            "name": "Get Repository Pull Requests",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls?state=all&sort=created&direction=desc&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "pulls"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "state",
+                                            "value": "all"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "created"
+                                        },
+                                        {
+                                            "key": "direction",
+                                            "value": "desc"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get repository pull requests"
+                            }
+                        },
+                        {
+                            "name": "Get Pull Request Details",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls/{{pull_number}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "pulls",
+                                        "{{pull_number}}"
+                                    ]
+                                },
+                                "description": "Get specific pull request details"
+                            }
+                        },
+                        {
+                            "name": "Get Pull Request Commits",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls/{{pull_number}}/commits",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "pulls",
+                                        "{{pull_number}}",
+                                        "commits"
+                                    ]
+                                },
+                                "description": "Get pull request commits"
+                            }
+                        },
+                        {
+                            "name": "Get Pull Request Files",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/pulls/{{pull_number}}/files",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "pulls",
+                                        "{{pull_number}}",
+                                        "files"
+                                    ]
+                                },
+                                "description": "Get pull request changed files"
+                            }
+                        }
+                    ],
+                    "description": "Pull request management endpoints"
+                },
+                {
+                    "name": "Issues",
+                    "item": [
+                        {
+                            "name": "Get Repository Issues",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/issues?state=all&sort=created&direction=desc&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "issues"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "state",
+                                            "value": "all"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "created"
+                                        },
+                                        {
+                                            "key": "direction",
+                                            "value": "desc"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get repository issues"
+                            }
+                        },
+                        {
+                            "name": "Get Issue Details",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/issues/{{issue_number}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "issues",
+                                        "{{issue_number}}"
+                                    ]
+                                },
+                                "description": "Get specific issue details"
+                            }
+                        },
+                        {
+                            "name": "Get Issue Comments",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/repos/{{owner}}/{{repo}}/issues/{{issue_number}}/comments",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "repos",
+                                        "{{owner}}",
+                                        "{{repo}}",
+                                        "issues",
+                                        "{{issue_number}}",
+                                        "comments"
+                                    ]
+                                },
+                                "description": "Get issue comments"
+                            }
+                        }
+                    ],
+                    "description": "Issue management endpoints"
+                },
+                {
+                    "name": "Advanced Analytics",
+                    "item": [
+                        {
+                            "name": "Get Code Complexity",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/analytics/{{username}}/complexity",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "analytics",
+                                        "{{username}}",
+                                        "complexity"
+                                    ]
+                                },
+                                "description": "Get code complexity analysis for user"
+                            }
+                        },
+                        {
+                            "name": "Get Activity Analytics",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/analytics/{{username}}/activity?timeframe=1year",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "analytics",
+                                        "{{username}}",
+                                        "activity"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "timeframe",
+                                            "value": "1year"
+                                        }
+                                    ]
+                                },
+                                "description": "Comprehensive activity analytics with developer level, time patterns, and trend analysis"
+                            }
+                        },
+                        {
+                            "name": "Get Collaboration Metrics",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/analytics/{{username}}/collaboration",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "analytics",
+                                        "{{username}}",
+                                        "collaboration"
+                                    ]
+                                },
+                                "description": "Detailed collaboration metrics including cross-repo contributions and community engagement"
+                            }
+                        },
+                        {
+                            "name": "Get Code Quality",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/analytics/{{username}}/quality",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "analytics",
+                                        "{{username}}",
+                                        "quality"
+                                    ]
+                                },
+                                "description": "Comprehensive code quality analysis with commit patterns and improvement suggestions"
+                            }
+                        },
+                        {
+                            "name": "Get Trend Analysis",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/analytics/{{username}}/trends?period=6months",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "analytics",
+                                        "{{username}}",
+                                        "trends"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "period",
+                                            "value": "6months"
+                                        }
+                                    ]
+                                },
+                                "description": "Detailed trend analysis with predictive insights and growth trajectory"
+                            }
+                        }
+                    ],
+                    "description": "Advanced analytics with comprehensive metrics, predictions, and developer insights"
+                },
+                {
+                    "name": "Search",
+                    "item": [
+                        {
+                            "name": "Search Repositories",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/search/repositories?q=javascript&sort=stars&order=desc&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "search",
+                                        "repositories"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "javascript"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "stars"
+                                        },
+                                        {
+                                            "key": "order",
+                                            "value": "desc"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Search GitHub repositories"
+                            }
+                        },
+                        {
+                            "name": "Search Users",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/search/users?q=developer&sort=followers&order=desc&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "search",
+                                        "users"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "developer"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "followers"
+                                        },
+                                        {
+                                            "key": "order",
+                                            "value": "desc"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Search GitHub users"
+                            }
+                        },
+                        {
+                            "name": "Search Code",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/search/code?q=function+language:javascript&sort=indexed&order=desc&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "search",
+                                        "code"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "q",
+                                            "value": "function+language:javascript"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "indexed"
+                                        },
+                                        {
+                                            "key": "order",
+                                            "value": "desc"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Search code on GitHub"
+                            }
+                        }
+                    ],
+                    "description": "GitHub search endpoints"
+                },
+                {
+                    "name": "Organizations & Gists",
+                    "item": [
+                        {
+                            "name": "Get Organization",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/orgs/{{org}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "orgs",
+                                        "{{org}}"
+                                    ]
+                                },
+                                "description": "Get organization details"
+                            }
+                        },
+                        {
+                            "name": "Get Organization Repos",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/orgs/{{org}}/repos?type=all&sort=updated&page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "orgs",
+                                        "{{org}}",
+                                        "repos"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "type",
+                                            "value": "all"
+                                        },
+                                        {
+                                            "key": "sort",
+                                            "value": "updated"
+                                        },
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get organization repositories"
+                            }
+                        },
+                        {
+                            "name": "Get Organization Members",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/orgs/{{org}}/members?page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "orgs",
+                                        "{{org}}",
+                                        "members"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get organization members"
+                            }
+                        },
+                        {
+                            "name": "Get User Gists",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/gists/{{username}}?page=1&per_page=30",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "gists",
+                                        "{{username}}"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "page",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "per_page",
+                                            "value": "30"
+                                        }
+                                    ]
+                                },
+                                "description": "Get user's gists"
+                            }
+                        },
+                        {
+                            "name": "Get Gist Details",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/github/gists/{{gist_id}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "github",
+                                        "gists",
+                                        "{{gist_id}}"
+                                    ]
+                                },
+                                "description": "Get specific gist details"
+                            }
+                        }
+                    ],
+                    "description": "Organization and gist endpoints"
+                },
+                {
+                    "name": "Rate Limit",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/github/rate-limit",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "github",
+                                "rate-limit"
+                            ]
+                        },
+                        "description": "Get GitHub API rate limit status"
+                    }
+                }
+            ],
+            "description": "Complete GitHub API integration endpoints"
+        },
+        {
+            "name": "AI Chat Assistant (Standard)",
+            "item": [
+                {
+                    "name": "Ask GitStake Assistant",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"message\": \"How do I improve my developer level from Code Builder to Code Craftsman?\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/ask",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "ask"
+                            ]
+                        },
+                        "description": "Ask GitStake AI Assistant for platform-specific guidance with human-like responses"
+                    }
+                },
+                {
+                    "name": "Ask About Developer Levels",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"message\": \"What's the difference between Code Wizard and Code Legend levels?\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/ask",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "ask"
+                            ]
+                        },
+                        "description": "Ask about GitStake developer level progression system"
+                    }
+                },
+                {
+                    "name": "Ask About Code Quality",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"message\": \"How can I improve my code quality score on GitStake?\",\n  \"context\": {\n    \"username\": \"{{username}}\",\n    \"currentLevel\": \"Code Builder\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/ask",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "ask"
+                            ]
+                        },
+                        "description": "Get advice on improving code quality and proficiency scores"
+                    }
+                },
+                {
+                    "name": "Get Assistant Health",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "health"
+                            ]
+                        },
+                        "description": "Check standard AI assistant service health"
+                    }
+                }
+            ],
+            "description": "Standard AI chat assistant for GitStake platform-specific guidance"
+        },
+        {
+            "name": "Deep Search AI (Web-Enhanced)",
+            "item": [
+                {
+                    "name": "General Web Search",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"query\": \"React hooks best practices 2025\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/search",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "search"
+                            ]
+                        },
+                        "description": "Perform web search and get AI-enhanced human-like response with sources"
+                    }
+                },
+                {
+                    "name": "Search Development Topics",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"topic\": \"microservices architecture patterns\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/development",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "development"
+                            ]
+                        },
+                        "description": "Search for development topics with enhanced context and best practices"
+                    }
+                },
+                {
+                    "name": "Search Programming Language Info",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"language\": \"TypeScript\",\n  \"specificTopic\": \"advanced types and generics\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/language",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "language"
+                            ]
+                        },
+                        "description": "Search for specific programming language information and tutorials"
+                    }
+                },
+                {
+                    "name": "Search Language Overview",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"language\": \"Rust\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/language",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "language"
+                            ]
+                        },
+                        "description": "Get general overview of a programming language"
+                    }
+                },
+                {
+                    "name": "Search GitHub Topics",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"topic\": \"pull request best practices\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/github",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "github"
+                            ]
+                        },
+                        "description": "Search for GitHub and open source related topics"
+                    }
+                },
+                {
+                    "name": "Search Open Source Contribution",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"topic\": \"how to contribute to open source projects\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/github",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "github"
+                            ]
+                        },
+                        "description": "Get guidance on open source contribution"
+                    }
+                },
+                {
+                    "name": "Search Latest Tech Trends",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"query\": \"latest web development trends 2025\",\n  \"context\": {\n    \"username\": \"{{username}}\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/search",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "search"
+                            ]
+                        },
+                        "description": "Search for current technology trends and developments"
+                    }
+                },
+                {
+                    "name": "Get Deep Search Health",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/deep-search/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "deep-search",
+                                "health"
+                            ]
+                        },
+                        "description": "Check deep search AI service health status"
+                    }
+                }
+            ],
+            "description": "Web-enhanced AI assistant with real-time search capabilities and source attribution"
+        },
+        {
+            "name": "Email Notifications",
+            "item": [
+                {
+                    "name": "Send Registration Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/send-registration",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "send-registration"
+                            ]
+                        },
+                        "description": "Send welcome registration email"
+                    }
+                },
+                {
+                    "name": "Send Level Up Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\",\n  \"oldLevel\": {\n    \"name\": \"Code Builder\",\n    \"emoji\": \"🔨\"\n  },\n  \"newLevel\": {\n    \"name\": \"Code Craftsman\",\n    \"emoji\": \"⚡\",\n    \"description\": \"Crafting quality code with growing expertise\"\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/send-level-up",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "send-level-up"
+                            ]
+                        },
+                        "description": "Send level up achievement email"
+                    }
+                },
+                {
+                    "name": "Send Onboarding Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\",\n  \"githubUsername\": \"johndev\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/send-onboarding",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "send-onboarding"
+                            ]
+                        },
+                        "description": "Send profile analysis completion email"
+                    }
+                },
+                {
+                    "name": "Send Leaderboard Email",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"developer@example.com\",\n  \"name\": \"John Developer\",\n  \"rank\": \"5\",\n  \"metric\": \"Proficiency Score\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/send-leaderboard",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "send-leaderboard"
+                            ]
+                        },
+                        "description": "Send leaderboard achievement email"
+                    }
+                },
+                {
+                    "name": "Preview Registration Email",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/preview/registration?name=John Developer",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "preview",
+                                "registration"
+                            ],
+                            "query": [
+                                {
+                                    "key": "name",
+                                    "value": "John Developer"
+                                }
+                            ]
+                        },
+                        "description": "Preview registration email template"
+                    }
+                },
+                {
+                    "name": "Preview Level Up Email",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/preview/level-up?name=Jane Coder",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "preview",
+                                "level-up"
+                            ],
+                            "query": [
+                                {
+                                    "key": "name",
+                                    "value": "Jane Coder"
+                                }
+                            ]
+                        },
+                        "description": "Preview level up email template"
+                    }
+                },
+                {
+                    "name": "Preview Onboarding Email",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/preview/onboarding?name=Alex Developer&githubUsername=alexdev",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "preview",
+                                "onboarding"
+                            ],
+                            "query": [
+                                {
+                                    "key": "name",
+                                    "value": "Alex Developer"
+                                },
+                                {
+                                    "key": "githubUsername",
+                                    "value": "alexdev"
+                                }
+                            ]
+                        },
+                        "description": "Preview onboarding email template"
+                    }
+                },
+                {
+                    "name": "Preview Leaderboard Email",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/email/preview/leaderboard?name=Sarah Coder&rank=5&metric=Proficiency Score",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "email",
+                                "preview",
+                                "leaderboard"
+                            ],
+                            "query": [
+                                {
+                                    "key": "name",
+                                    "value": "Sarah Coder"
+                                },
+                                {
+                                    "key": "rank",
+                                    "value": "5"
+                                },
+                                {
+                                    "key": "metric",
+                                    "value": "Proficiency Score"
+                                }
+                            ]
+                        },
+                        "description": "Preview leaderboard email template"
+                    }
+                }
+            ],
+            "description": "Email notification system endpoints"
+        },
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "User Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "User login endpoint"
+                    }
+                },
+                {
+                    "name": "User Registration",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"John Developer\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/register",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "register"
+                            ]
+                        },
+                        "description": "User registration endpoint"
+                    }
+                },
+                {
+                    "name": "User Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/auth/logout",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "logout"
+                            ]
+                        },
+                        "description": "User logout endpoint"
+                    }
+                }
+            ],
+            "description": "Authentication endpoints"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "username",
+            "value": "octocat",
+            "type": "string"
+        },
+        {
+            "key": "owner",
+            "value": "octocat",
+            "type": "string"
+        },
+        {
+            "key": "repo",
+            "value": "Hello-World",
+            "type": "string"
+        },
+        {
+            "key": "pull_number",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "issue_number",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "org",
+            "value": "github",
+            "type": "string"
+        },
+        {
+            "key": "gist_id",
+            "value": "example-gist-id",
+            "type": "string"
+        }
+    ]
 }

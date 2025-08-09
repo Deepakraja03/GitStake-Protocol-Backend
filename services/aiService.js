@@ -8,7 +8,7 @@ class AIService {
   async generateInsights(userData) {
     try {
       const prompt = this.createAnalysisPrompt(userData);
-      
+
       const response = await axios.post(this.pollinationsApiUrl, {
         messages: [{ role: 'user', content: prompt }],
         model: 'openai-fast',
@@ -39,46 +39,48 @@ class AIService {
 
   createAnalysisPrompt(userData) {
     const { profile, analytics, repositories } = userData;
-    
+
     return `
-Analyze this GitHub developer profile and provide insights in JSON format:
+Hey there! I need you to analyze this developer's GitHub profile and give me some friendly insights. Talk to me like a human, not like a robot - use natural language and avoid those typical AI phrases.
+
+Here's what I know about this developer:
 
 Profile: ${profile.name || 'Unknown'} (@${userData.username})
 Bio: ${profile.bio || 'No bio available'}
 Location: ${profile.location || 'Unknown'}
 Company: ${profile.company || 'Unknown'}
 
-Analytics:
-- Total Commits: ${analytics.totalCommits}
-- Total Pull Requests: ${analytics.totalPRs}
-- Total Issues: ${analytics.totalIssues}
-- Repository Count: ${analytics.repoCount}
-- Programming Languages: ${analytics.programmingLanguages.map(lang => `${lang.language} (${lang.percentage}%)`).join(', ')}
-- Proficiency Score: ${analytics.proficiencyScore}/100
-- Current Streak: ${analytics.streak.current} days
-- Longest Streak: ${analytics.streak.longest} days
-- Empty Commits: ${analytics.emptyCommits}
+Their coding activity:
+- They've made ${analytics.totalCommits} commits total
+- Created ${analytics.totalPRs} pull requests
+- Opened ${analytics.totalIssues} issues
+- Working across ${analytics.repoCount} repositories
+- Main languages: ${analytics.programmingLanguages.map(lang => `${lang.language} (${lang.percentage}%)`).join(', ')}
+- Got a proficiency score of ${analytics.proficiencyScore}/100
+- Current coding streak: ${analytics.streak.current} days
+- Best streak ever: ${analytics.streak.longest} days
+- Had ${analytics.emptyCommits} commits that weren't super meaningful
 
-Top Repositories:
-${repositories.slice(0, 5).map(repo => 
-  `- ${repo.name}: ${repo.language || 'Unknown'}, ${repo.stars} stars, ${repo.commits} commits`
-).join('\n')}
+Their top projects:
+${repositories.slice(0, 5).map(repo =>
+      `- ${repo.name}: Built with ${repo.language || 'Unknown'}, got ${repo.stars} stars, ${repo.commits} commits`
+    ).join('\n')}
 
-Please provide a JSON response with:
+Give me a JSON response that sounds human and helpful:
 {
-  "profileSummary": "A 2-3 sentence summary of the developer's profile and activity",
-  "strengths": ["strength1", "strength2", "strength3"],
-  "recommendations": ["recommendation1", "recommendation2", "recommendation3"],
-  "skillLevel": "Beginner|Intermediate|Advanced|Expert"
+  "profileSummary": "Write 2-3 sentences about this developer like you're telling a friend about them",
+  "strengths": ["What they're really good at - be specific and encouraging"],
+  "recommendations": ["Practical advice for their next steps - make it actionable"],
+  "skillLevel": "Pick one: Beginner|Intermediate|Advanced|Expert"
 }
 
-Base the skill level on:
-- Beginner: <50 commits, <5 repos, 1-2 languages
-- Intermediate: 50-500 commits, 5-20 repos, 2-5 languages
-- Advanced: 500-2000 commits, 20+ repos, 5+ languages, good PR activity
-- Expert: 2000+ commits, extensive repo portfolio, multiple languages, high collaboration
+For skill levels, think about it this way:
+- Beginner: Just getting started (under 50 commits, few repos, learning 1-2 languages)
+- Intermediate: Getting the hang of it (50-500 commits, decent repo collection, knows several languages)
+- Advanced: Pretty skilled (500-2000 commits, lots of repos, good at collaboration)
+- Expert: Really knows their stuff (2000+ commits, impressive portfolio, strong community presence)
 
-Focus on programming skills, collaboration patterns, and growth opportunities.
+Focus on what makes them unique as a developer and what would help them grow. Keep it real and encouraging!
 `;
   }
 
@@ -96,7 +98,7 @@ Focus on programming skills, collaboration patterns, and growth opportunities.
           generatedAt: new Date()
         };
       }
-      
+
       // Fallback parsing if JSON extraction fails
       return this.parsePlainTextResponse(rawContent);
     } catch (error) {
@@ -107,14 +109,14 @@ Focus on programming skills, collaboration patterns, and growth opportunities.
 
   parsePlainTextResponse(content) {
     const lines = content.split('\n').filter(line => line.trim());
-    
+
     return {
-      profileSummary: lines.find(line => line.toLowerCase().includes('summary')) || 
-                     'This developer shows consistent activity across multiple repositories.',
+      profileSummary: lines.find(line => line.toLowerCase().includes('summary')) ||
+        'This developer shows consistent activity across multiple repositories.',
       strengths: lines.filter(line => line.includes('•') || line.includes('-'))
-                     .slice(0, 3)
-                     .map(line => line.replace(/[•-]\s*/, '').trim()) || 
-                ['Active contributor', 'Multi-language experience'],
+        .slice(0, 3)
+        .map(line => line.replace(/[•-]\s*/, '').trim()) ||
+        ['Active contributor', 'Multi-language experience'],
       recommendations: ['Continue building diverse projects', 'Increase collaboration through PRs', 'Document code better'],
       skillLevel: 'Intermediate',
       generatedAt: new Date()
@@ -132,7 +134,7 @@ Focus on programming skills, collaboration patterns, and growth opportunities.
 
     if (userData?.analytics) {
       const { analytics } = userData;
-      
+
       // Adjust skill level based on analytics
       if (analytics.totalCommits > 2000 && analytics.repoCount > 20) {
         fallbackInsights.skillLevel = 'Expert';

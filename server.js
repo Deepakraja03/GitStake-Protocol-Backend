@@ -23,6 +23,7 @@ const authRoutes = require('./routes/authRoutes');
 const githubRoutes = require('./routes/githubRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const emailRoutes = require('./routes/emailRoutes');
+const deepSearchRoutes = require('./routes/deepSearchRoutes');
 const { range } = require('lodash');
 
 // Global middleware
@@ -38,6 +39,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/github', githubRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/email', emailRoutes);
+app.use('/api/deep-search', deepSearchRoutes);
 
 
 app.get('/', (req, res) => {
@@ -90,6 +92,13 @@ app.get('/api', (req, res) => {
         'POST /api/email/send-level-up': 'Send level up notification',
         'POST /api/email/send-onboarding': 'Send onboarding email',
         'GET /api/email/preview/registration': 'Preview registration email'
+      },
+      deepSearch: {
+        'POST /api/deep-search/search': 'General web search with AI response',
+        'POST /api/deep-search/development': 'Search development topics',
+        'POST /api/deep-search/language': 'Search programming language info',
+        'POST /api/deep-search/github': 'Search GitHub and open source topics',
+        'GET /api/deep-search/health': 'Deep search service health'
       },
       auth: {
         'POST /api/auth/login': 'User login',

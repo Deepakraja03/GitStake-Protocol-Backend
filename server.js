@@ -29,7 +29,16 @@ const cronRoutes = require('./routes/cronRoutes');
 
 // Global middleware
 app.use(helmet());
-app.use(cors("https://git-stake-protocol-frontend.vercel.app/"));
+app.use(cors({
+  origin: [
+    "https://git-stake-protocol-frontend.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:5173", // Vite default port
+    "http://localhost:5174"  // Alternative Vite port
+  ],
+  credentials: true
+}));
 app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));

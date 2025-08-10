@@ -102,7 +102,7 @@ const QuestSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['created', 'staking', 'active', 'closed', 'completed'],
-    default: 'created'
+    default: 'staking'
   },
   participants: {
     staked: [{

@@ -133,6 +133,16 @@ app.get('/api', (req, res) => {
         'PUT /api/quests/update-wallet': 'Update user wallet address',
         'GET /api/quests/crypto-rates': 'Get crypto reward rates by level'
       },
+      bossBattles: {
+        'POST /api/quests/boss-battle/create': 'Create personalized boss battle',
+        'GET /api/quests/boss-battle/:battleId': 'Get boss battle details',
+        'POST /api/quests/boss-battle/:battleId/start': 'Start boss battle',
+        'POST /api/quests/boss-battle/:battleId/submit': 'Submit boss battle solution',
+        'GET /api/quests/boss-battle/user/:username/history': 'Get user boss battle history',
+        'GET /api/quests/boss-battle/user/:username/perks': 'Get user perks and achievements',
+        'GET /api/quests/boss-battle/leaderboard': 'Get boss battle leaderboard',
+        'POST /api/quests/boss-battle/admin/cleanup': 'Cleanup expired boss battles (admin)'
+      },
       cron: {
         'GET /api/cron/status': 'Get cron jobs status',
         'POST /api/cron/start-all': 'Start all cron jobs',

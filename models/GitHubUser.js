@@ -91,6 +91,57 @@ const GitHubUserSchema = new mongoose.Schema({
       },
       message: 'Invalid wallet address format'
     }
+  },
+  perks: {
+    totalExperiencePoints: { type: Number, default: 0 },
+    bossBattlesWon: { type: Number, default: 0 },
+    bossBattlesLost: { type: Number, default: 0 },
+    currentStreak: { type: Number, default: 0 },
+    longestStreak: { type: Number, default: 0 },
+    badges: [{
+      name: String,
+      description: String,
+      earnedAt: Date,
+      rarity: { type: String, enum: ['common', 'rare', 'epic', 'legendary'], default: 'common' }
+    }],
+    titles: [{
+      name: String,
+      description: String,
+      earnedAt: Date,
+      isActive: { type: Boolean, default: false }
+    }],
+    skillBoosts: [{
+      skill: String,
+      boost: Number,
+      earnedAt: Date,
+      expiresAt: Date
+    }],
+    specialAbilities: [{
+      name: String,
+      description: String,
+      effect: String,
+      earnedAt: Date,
+      isActive: { type: Boolean, default: true }
+    }],
+    achievements: [{
+      name: String,
+      description: String,
+      category: String,
+      earnedAt: Date,
+      points: Number
+    }],
+    levelProgression: {
+      currentLevel: { type: Number, default: 1 },
+      experienceToNext: { type: Number, default: 100 },
+      totalExperience: { type: Number, default: 0 }
+    },
+    statistics: {
+      questsCompleted: { type: Number, default: 0 },
+      averageScore: { type: Number, default: 0 },
+      favoriteLanguage: String,
+      codingStreak: { type: Number, default: 0 },
+      lastActivity: Date
+    }
   }
 }, {
   timestamps: true

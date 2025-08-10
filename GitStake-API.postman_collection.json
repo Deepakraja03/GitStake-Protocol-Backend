@@ -2104,6 +2104,631 @@
             "description": "AI-powered quest system with difficulty-scaled challenges and crypto rewards for all 8 developer levels"
         },
         {
+            "name": "Boss Battle System",
+            "item": [
+                {
+                    "name": "Boss Battle Management",
+                    "item": [
+                        {
+                            "name": "Create Boss Battle",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"email\": \"developer@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/create",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "create"
+                                    ]
+                                },
+                                "description": "Create AI-generated personalized boss battle - analyzes user's GitHub profile, coding strengths, and generates challenge one level above current developer level using Pollinations.ai"
+                            }
+                        },
+                        {
+                            "name": "Create Boss Battle for Advanced User",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"advanced_developer\",\n  \"email\": \"advanced@example.com\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/create",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "create"
+                                    ]
+                                },
+                                "description": "Create boss battle for advanced developer - AI will generate more complex challenges based on higher skill level"
+                            }
+                        },
+                        {
+                            "name": "Get Boss Battle Details",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}?username={{username}}",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "username",
+                                            "value": "{{username}}",
+                                            "description": "Username for authorization"
+                                        }
+                                    ]
+                                },
+                                "description": "Get detailed information about a specific boss battle including problem statement and boss characteristics"
+                            }
+                        },
+                        {
+                            "name": "Start Boss Battle",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/start",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "start"
+                                    ]
+                                },
+                                "description": "Start the boss battle and change status from 'initiated' to 'facing'"
+                            }
+                        },
+                        {
+                            "name": "Submit Boss Battle Solution",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Epic boss battle solution\\n  const data = JSON.parse(input);\\n  return data.reduce((sum, num) => sum + num, 0);\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Submit solution for boss battle (max 3 attempts, 72-hour time limit)"
+                            }
+                        },
+                        {
+                            "name": "Submit Advanced Algorithm Solution",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function defeatBoss(input) {\\n  // Advanced boss battle solution with AI evaluation\\n  const graph = buildGraph(input);\\n  return dijkstraAlgorithm(graph);\\n}\\n\\nfunction buildGraph(data) {\\n  // Efficient graph construction\\n  const graph = new Map();\\n  data.edges.forEach(([from, to, weight]) => {\\n    if (!graph.has(from)) graph.set(from, []);\\n    graph.get(from).push({ node: to, weight });\\n  });\\n  return graph;\\n}\\n\\nfunction dijkstraAlgorithm(graph) {\\n  // Optimized shortest path with priority queue\\n  const distances = new Map();\\n  const pq = new PriorityQueue();\\n  // Implementation details...\\n  return shortestPath;\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Submit advanced algorithm solution - AI evaluates correctness, efficiency, code quality, and boss challenge requirements"
+                            }
+                        },
+                        {
+                            "name": "Submit Perfect Solution (High Score)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Perfect solution with optimal time/space complexity\\n  // This solution demonstrates mastery of the target level\\n  \\n  const data = JSON.parse(input);\\n  \\n  // Edge case handling\\n  if (!data || data.length === 0) return 0;\\n  \\n  // Optimal algorithm implementation\\n  const result = optimizedAlgorithm(data);\\n  \\n  return result;\\n}\\n\\n// Helper function with clean, efficient implementation\\nfunction optimizedAlgorithm(data) {\\n  // O(n log n) solution with proper error handling\\n  try {\\n    return data\\n      .filter(item => item != null)\\n      .map(item => processItem(item))\\n      .reduce((acc, val) => acc + val, 0);\\n  } catch (error) {\\n    console.error('Processing error:', error);\\n    return 0;\\n  }\\n}\\n\\nfunction processItem(item) {\\n  // Clean, readable processing logic\\n  return typeof item === 'number' ? item * 2 : 0;\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Submit a well-crafted solution designed to score 85-95 points with AI evaluation - includes optimal algorithm, error handling, and clean code structure"
+                            }
+                        },
+                        {
+                            "name": "Submit Suboptimal Solution (Lower Score)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Basic solution - will score lower due to inefficiency\\n  var data = JSON.parse(input);\\n  var result = 0;\\n  for (var i = 0; i < data.length; i++) {\\n    for (var j = 0; j < data.length; j++) {\\n      if (i != j) {\\n        result += data[i];\\n      }\\n    }\\n  }\\n  return result;\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Submit an inefficient solution to test AI evaluation - should score 50-65 points due to O(n²) complexity and poor code quality"
+                            }
+                        }
+                    ],
+                    "description": "Core boss battle management endpoints with AI-powered creation and evaluation"
+                },
+                {
+                    "name": "AI Evaluation Testing",
+                    "item": [
+                        {
+                            "name": "Test AI Evaluation - Perfect Code",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  /**\\n   * Optimal solution with comprehensive approach\\n   * Time Complexity: O(n log n)\\n   * Space Complexity: O(n)\\n   */\\n  \\n  // Input validation and edge case handling\\n  if (!input || typeof input !== 'string') {\\n    throw new Error('Invalid input format');\\n  }\\n  \\n  let data;\\n  try {\\n    data = JSON.parse(input);\\n  } catch (error) {\\n    throw new Error('Failed to parse input JSON');\\n  }\\n  \\n  if (!Array.isArray(data) || data.length === 0) {\\n    return 0;\\n  }\\n  \\n  // Efficient algorithm implementation\\n  const processedData = data\\n    .filter(item => typeof item === 'number' && !isNaN(item))\\n    .sort((a, b) => a - b);\\n  \\n  // Apply boss-specific logic\\n  const result = processedData.reduce((acc, curr, index) => {\\n    const weight = Math.pow(2, index % 3);\\n    return acc + (curr * weight);\\n  }, 0);\\n  \\n  return Math.round(result * 100) / 100; // Round to 2 decimal places\\n}\\n\\n// Additional helper functions for modularity\\nfunction validateInput(input) {\\n  return input && typeof input === 'string';\\n}\\n\\nfunction calculateWeight(index) {\\n  return Math.pow(2, index % 3);\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Test AI evaluation with perfect code - should score 90-100 points. Includes optimal algorithm, comprehensive error handling, documentation, and modular design."
+                            }
+                        },
+                        {
+                            "name": "Test AI Evaluation - Good Code",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Good solution with minor optimization opportunities\\n  const data = JSON.parse(input);\\n  \\n  if (!data || data.length === 0) {\\n    return 0;\\n  }\\n  \\n  // Decent algorithm but could be more efficient\\n  let result = 0;\\n  for (let i = 0; i < data.length; i++) {\\n    if (typeof data[i] === 'number') {\\n      result += data[i] * (i + 1);\\n    }\\n  }\\n  \\n  return result;\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Test AI evaluation with good code - should score 75-85 points. Functional solution with basic error handling but room for optimization."
+                            }
+                        },
+                        {
+                            "name": "Test AI Evaluation - Poor Code",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Poor solution with multiple issues\\n  var data = JSON.parse(input);\\n  var result = 0;\\n  for (var i = 0; i < data.length; i++) {\\n    for (var j = 0; j < data.length; j++) {\\n      for (var k = 0; k < data.length; k++) {\\n        result = result + data[i];\\n      }\\n    }\\n  }\\n  return result;\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Test AI evaluation with poor code - should score 40-60 points. O(n³) complexity, no error handling, inefficient algorithm."
+                            }
+                        },
+                        {
+                            "name": "Test AI Evaluation - Broken Code",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Broken solution with syntax errors\\n  var data = JSON.parse(input\\n  var result = 0\\n  for (var i = 0; i < data.length i++) {\\n    result += data[i]\\n  }\\n  return result\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Test AI evaluation with broken code - should score 0 points and be marked as INVALID. Contains syntax errors and won't execute properly."
+                            }
+                        },
+                        {
+                            "name": "Test AI Validation - Wrong Logic",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"{{username}}\",\n  \"solution\": \"function solveBoss(input) {\\n  // Solution with wrong logic - will fail test cases\\n  const data = JSON.parse(input);\\n  \\n  // Wrong algorithm - just returns first element\\n  return data[0] || 0;\\n}\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/{{battleId}}/submit",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "{{battleId}}",
+                                        "submit"
+                                    ]
+                                },
+                                "description": "Test AI validation with wrong logic - should score 0 points and be marked as INVALID because it fails test cases despite being syntactically correct."
+                            }
+                        }
+                    ],
+                    "description": "Test AI-only validation and evaluation system. Solutions must pass ALL test cases to be valid. Invalid solutions score 0 points regardless of code quality."
+                },
+                {
+                    "name": "User Boss Battle Data",
+                    "item": [
+                        {
+                            "name": "Get User Boss Battle History",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/user/{{username}}/history?status=won&limit=10",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "user",
+                                        "{{username}}",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "won",
+                                            "description": "Filter by status: initiated, facing, won, lost, expired"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "10",
+                                            "description": "Number of battles to return"
+                                        }
+                                    ]
+                                },
+                                "description": "Get user's boss battle history with summary statistics"
+                            }
+                        },
+                        {
+                            "name": "Get All User Boss Battles",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/user/{{username}}/history?limit=20",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "user",
+                                        "{{username}}",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "limit",
+                                            "value": "20",
+                                            "description": "Get all boss battles regardless of status"
+                                        }
+                                    ]
+                                },
+                                "description": "Get all user's boss battles with complete history and statistics"
+                            }
+                        },
+                        {
+                            "name": "Get Active Boss Battles",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/user/{{username}}/history?status=facing&limit=5",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "user",
+                                        "{{username}}",
+                                        "history"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "status",
+                                            "value": "facing",
+                                            "description": "Get currently active boss battles"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "5",
+                                            "description": "Limit active battles"
+                                        }
+                                    ]
+                                },
+                                "description": "Get user's currently active boss battles that are in progress"
+                            }
+                        },
+                        {
+                            "name": "Get User Perks & Achievements",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/user/{{username}}/perks",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "user",
+                                        "{{username}}",
+                                        "perks"
+                                    ]
+                                },
+                                "description": "Get user's perks, badges, titles, experience points, and achievements from boss battles"
+                            }
+                        }
+                    ],
+                    "description": "User-specific boss battle data and achievements"
+                },
+                {
+                    "name": "Boss Battle Leaderboard",
+                    "item": [
+                        {
+                            "name": "Get Boss Battle Leaderboard",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/leaderboard?timeframe=month&limit=20",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "leaderboard"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "timeframe",
+                                            "value": "month",
+                                            "description": "Timeframe: all, week, month"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "20",
+                                            "description": "Number of top players to return"
+                                        }
+                                    ]
+                                },
+                                "description": "Get boss battle leaderboard with top performers, battles won, and average scores"
+                            }
+                        },
+                        {
+                            "name": "Get Weekly Boss Leaderboard",
+                            "request": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/leaderboard?timeframe=week&limit=10",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "leaderboard"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "timeframe",
+                                            "value": "week",
+                                            "description": "Weekly leaderboard"
+                                        },
+                                        {
+                                            "key": "limit",
+                                            "value": "10",
+                                            "description": "Top 10 players"
+                                        }
+                                    ]
+                                },
+                                "description": "Get weekly boss battle leaderboard for recent performance"
+                            }
+                        }
+                    ],
+                    "description": "Boss battle leaderboard and rankings"
+                },
+                {
+                    "name": "Admin Boss Battle Management",
+                    "item": [
+                        {
+                            "name": "Cleanup Expired Boss Battles",
+                            "request": {
+                                "method": "POST",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/api/quests/boss-battle/admin/cleanup",
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "quests",
+                                        "boss-battle",
+                                        "admin",
+                                        "cleanup"
+                                    ]
+                                },
+                                "description": "Admin endpoint to cleanup expired boss battles (72+ hours old)"
+                            }
+                        }
+                    ],
+                    "description": "Administrative boss battle management endpoints"
+                }
+            ],
+            "description": "🐉 Epic AI-powered boss battle system using Pollinations.ai for challenge generation and solution evaluation. Features personalized challenges one level above user's current developer level, intelligent scoring (correctness, efficiency, code quality, boss requirements), detailed AI feedback, 72-hour time limit, and max 3 attempts. Each solution is evaluated by AI for precise scoring and constructive feedback."
+        },
+        {
             "name": "Cron Job Management",
             "item": [
                 {
@@ -2402,6 +3027,11 @@
         {
             "key": "walletAddress",
             "value": "0x742d35Cc6634C0532925a3b8D4C9db96590c6C87",
+            "type": "string"
+        },
+        {
+            "key": "battleId",
+            "value": "BOSS_DEVELOPER123_CRAFTSMAN_1703123456789",
             "type": "string"
         }
     ]

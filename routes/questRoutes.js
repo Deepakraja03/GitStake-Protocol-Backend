@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const questController = require('../controllers/questController');
+const bossBattleController = require('../controllers/bossBattleController');
 
 // Quest Management Routes
 router.post('/generate', questController.generateQuest);
@@ -26,5 +27,17 @@ router.post('/process-all-closed', questController.processAllClosedQuests);
 // Wallet Management Routes
 router.put('/update-wallet', questController.updateUserWallet);
 router.get('/crypto-rates', questController.getCryptoRewardRates);
+
+// Boss Battle Routes
+router.post('/boss-battle/create', bossBattleController.createBossBattle);
+router.get('/boss-battle/:battleId', bossBattleController.getBossBattle);
+router.post('/boss-battle/:battleId/start', bossBattleController.startBossBattle);
+router.post('/boss-battle/:battleId/submit', bossBattleController.submitBossSolution);
+router.get('/boss-battle/user/:username/history', bossBattleController.getUserBossBattles);
+router.get('/boss-battle/user/:username/perks', bossBattleController.getUserPerks);
+router.get('/boss-battle/leaderboard', bossBattleController.getBossLeaderboard);
+
+// Admin Boss Battle Routes
+router.post('/boss-battle/admin/cleanup', bossBattleController.cleanupExpiredBattles);
 
 module.exports = router;
